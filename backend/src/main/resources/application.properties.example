@@ -1,0 +1,22 @@
+spring.application.name=bookstore-backend
+
+# --- Database ---
+# Create the DB first: CREATE DATABASE bookstore;
+spring.datasource.url=jdbc:mysql://localhost:3306/bookstore?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=YOUR_SQL_PASSWORD_HERE
+
+# hibernate.ddl-auto=update is fine for a class project (auto-creates/updates tables from your entities).
+# Do not use this in a real production app, but for a 1-week deadline it saves you writing raw SQL migrations.
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# --- JWT ---
+# This MUST be a long random string, at least 32 characters, kept secret.
+# Generate one with: openssl rand -base64 32
+app.jwt.secret=YOUR_JWT_SECRET_HERE
+app.jwt.expiration-ms=86400000
+
+# --- File storage for digital books (ebook/audiobook files) ---
+app.file.storage-path=./digital-content

@@ -1,0 +1,6 @@
+.github/
+target/
+.classpath
+.project
+.settings/
+application.properties
