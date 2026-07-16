@@ -39,8 +39,12 @@ function Navbar() {
       <div className="navbar-links">
         {isAuthenticated ? (
           <>
-            <Link to="/cart">Cart ({itemCount})</Link>
-            <Link to="/orders">My Orders</Link>
+            {!isAdmin && (
+              <>
+                <Link to="/cart">Cart ({itemCount})</Link>
+                <Link to="/orders">My Orders</Link>
+              </>
+            )}
             {isAdmin && (
               <>
                 <Link to="/admin/books">Manage Books</Link>
