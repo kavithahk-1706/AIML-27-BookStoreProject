@@ -5,3 +5,4 @@ target/
 .settings/
 application.properties
 .factorypath
+node_modules/

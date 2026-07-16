@@ -1,0 +1,59 @@
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { getBooks } from '../api/books'
+import BookGrid from '../components/BookGrid'
+import SearchBar from '../components/SearchBar'
+import CategoryFilter from '../components/CategoryFilter'
+import Pagination from '../components/Pagination'
+
+const PAGE_SIZE = 20
+
+function Home() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [books, setBooks] = useState([])
+  const [totalPages, setTotalPages] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
+  const page = Number(searchParams.get('page') || 0)
+  const search = searchParams.get('search') || ''
+  const categoryId = searchParams.get('categoryId') || ''
+
+  // sort isn't wired up — it's listed as a stretch feature in the backend doc.
+  useEffect(() => {
+    setLoading(true)
+    setError(false)
+    getBooks({
+      page,
+      size: PAGE_SIZE,
+      search: search || undefined,
+      categoryId: categoryId || undefined,
+    })
+      .then((data) => {
+        setBooks(data.content)
+        setTotalPages(data.totalPages)
+      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false))
+  }, [page, search, categoryId])
+
+  function updateParams(next) {
+    const merged = { search, categoryId, page: 0, ...next }
+    const cleaned = {}
+    if (merged.search) cleaned.search = merged.search
+    if (merged.categoryId) cleaned.categoryId = merged.categoryId
+    if (merged.page) cleaned.page = String(merged.page)
+    setSearchParams(cleaned)
+  }
+
+  return (
+    <div>
+      <SearchBar initialValue={search} onSearch={(value) => updateParams({ search: value, page: 0 })} />
+      <CategoryFilter selectedCategoryId={categoryId} onChange={(id) => updateParams({ categoryId: id, page: 0 })} />
+      <BookGrid books={books} loading={loading} error={error} />
+      <Pagination page={page} totalPages={totalPages} onPageChange={(p) => updateParams({ page: p })} />
+    </div>
+  )
+}
+
+export default Home
