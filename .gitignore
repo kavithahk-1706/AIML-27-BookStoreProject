@@ -7,4 +7,6 @@ application.properties
 .factorypath
 node_modules/
 digital-content/
+allobjects.txt
+git-filter-repo
 
