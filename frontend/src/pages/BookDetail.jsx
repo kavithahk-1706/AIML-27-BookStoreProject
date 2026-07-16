@@ -65,42 +65,56 @@ function BookDetail() {
     }
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error || !book) return <div>Book not found.</div>
+  if (loading) return <div className="page-state">Loading...</div>
+  if (error || !book) return <div className="page-state">Book not found.</div>
 
   const isDigital = book.format === 'EBOOK' || book.format === 'AUDIOBOOK'
 
   return (
-    <div>
-      {book.imageUrl && <img src={book.imageUrl} alt={book.title} />}
-      <h1>{book.title}</h1>
-      <p>{book.author}</p>
-      <FormatBadge format={book.format} />
-      <p>₹{Number(book.price).toFixed(2)}</p>
-      <p>{book.description}</p>
+    <div className="page-book-detail">
+      {/* Left column: cover image */}
+      <div className="book-detail-cover">
+        {book.imageUrl
+          ? <img src={book.imageUrl} alt={book.title} />
+          : <div className="book-detail-cover--empty" />}
+      </div>
 
-      {/* stock display only makes sense for physical books */}
-      {!isDigital && (
-        <p>{book.stockQuantity > 0 ? `${book.stockQuantity} in stock` : 'Out of stock'}</p>
-      )}
+      {/* Right column: all details */}
+      <div className="book-detail-info">
+        <h1>{book.title}</h1>
+        <p className="book-detail-author">{book.author}</p>
+        <FormatBadge format={book.format} />
+        <p className="book-detail-price">₹{Number(book.price).toFixed(2)}</p>
+        <p className="book-detail-description">{book.description}</p>
 
-      {isDigital && purchased ? (
-        // already owyns it — show read/listen, never add to cart
-        <div>
-          <button onClick={handleDownload} disabled={downloading}>
-            {downloading ? 'Preparing...' : book.format === 'AUDIOBOOK' ? 'Listen' : 'Read'}
-          </button>
-          {downloadError && <p className="error">{downloadError}</p>}
+        {/* stock display only makes sense for physical books */}
+        {!isDigital && (
+          <span className={book.stockQuantity > 0 ? 'stock-pill stock-pill--in' : 'stock-pill stock-pill--out'}>
+            {book.stockQuantity > 0 ? `${book.stockQuantity} in stock` : 'Out of stock'}
+          </span>
+        )}
+
+        <div className="book-detail-actions">
+          {isDigital && purchased ? (
+            // already owns it — show read/listen, never add to cart
+            <>
+              <button className="btn-secondary" onClick={handleDownload} disabled={downloading}>
+                {downloading ? 'Preparing...' : book.format === 'AUDIOBOOK' ? 'Listen' : 'Read'}
+              </button>
+              {downloadError && <p className="error">{downloadError}</p>}
+            </>
+          ) : (
+            // physical, or digital not yet purchased — show add to cart
+            <button
+              className="btn-primary"
+              onClick={handleAddToCart}
+              disabled={!isDigital && book.stockQuantity <= 0}
+            >
+              Add to cart
+            </button>
+          )}
         </div>
-      ) : (
-        // physical, or digital not yet purchased — show add to cart
-        <button
-          onClick={handleAddToCart}
-          disabled={!isDigital && book.stockQuantity <= 0}
-        >
-          Add to cart
-        </button>
-      )}
+      </div>
     </div>
   )
 }

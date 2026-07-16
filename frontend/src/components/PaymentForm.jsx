@@ -43,9 +43,9 @@ function PaymentForm({ onSubmit, submitting }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="payment-form">
       {validationError && <p className="error">{validationError}</p>}
-      <label>
+      <label className="form-field">
         Card number
         <input
           type="text"
@@ -56,7 +56,7 @@ function PaymentForm({ onSubmit, submitting }) {
           required
         />
       </label>
-      <label>
+      <label className="form-field">
         Expiry
         <input
           type="text"
@@ -67,7 +67,7 @@ function PaymentForm({ onSubmit, submitting }) {
           required
         />
       </label>
-      <label>
+      <label className="form-field">
         CVV
         <input
           type="password"

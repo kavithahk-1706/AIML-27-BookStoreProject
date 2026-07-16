@@ -5,8 +5,8 @@ function CartSummary({ total, itemCount, hasStockIssue }) {
 
   return (
     <div className="cart-summary">
-      <p>{itemCount} item{itemCount === 1 ? '' : 's'}</p>
-      <p>Total: ${Number(total).toFixed(2)}</p>
+      <p className="cart-summary-count">{itemCount} item{itemCount === 1 ? '' : 's'}</p>
+      <p className="cart-summary-total">Total: ${Number(total).toFixed(2)}</p>
       <button
         disabled={itemCount === 0 || hasStockIssue}
         onClick={() => navigate('/checkout')}

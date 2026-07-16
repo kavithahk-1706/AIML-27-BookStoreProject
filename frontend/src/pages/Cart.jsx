@@ -9,14 +9,14 @@ function Cart() {
       item => item.quantity > (item.book?.stockQuantity || Infinity)
   )
 
-  if (loading) return <div>Loading cart...</div>
+  if (loading) return <div className="page-state">Loading cart...</div>
 
   if (items.length === 0) {
-    return <div>Your cart is empty.</div>
+    return <div className="page-state">Your cart is empty.</div>
   }
 
   return (
-    <div>
+    <div className="page-cart">
       <h1>Your Cart</h1>
       {hasStockIssue && (
         <p className="error">

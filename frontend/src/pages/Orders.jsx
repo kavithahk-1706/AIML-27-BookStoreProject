@@ -14,12 +14,12 @@ function Orders() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <div>Loading orders...</div>
-  if (error) return <div>Something went wrong loading your orders. Please try again.</div>
-  if (orders.length === 0) return <div>You haven't placed any orders yet.</div>
+  if (loading) return <div className="page-state">Loading orders...</div>
+  if (error) return <div className="page-state error">Something went wrong loading your orders. Please try again.</div>
+  if (orders.length === 0) return <div className="page-state">You haven't placed any orders yet.</div>
 
   return (
-    <div>
+    <div className="page-orders">
       <h1>Your Orders</h1>
       {orders.map((order) => (
         <OrderCard key={order.id} order={order} />

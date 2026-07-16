@@ -30,25 +30,27 @@ function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Log in</h1>
-      {location.state?.registered && <p>Account created — log in below.</p>}
-      {error && <p className="error">{error}</p>}
-      <label>
-        Email
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      </label>
-      <label>
-        Password
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </label>
-      <button type="submit" disabled={submitting}>
-        {submitting ? 'Logging in...' : 'Log in'}
-      </button>
-      <p>
-        Don't have an account? <Link to="/register">Register</Link>
-      </p>
-    </form>
+    <div className="auth-page">
+      <form onSubmit={handleSubmit} className="auth-form">
+        <h1>Log in</h1>
+        {location.state?.registered && <p>Account created — log in below.</p>}
+        {error && <p className="error">{error}</p>}
+        <label>
+          Email
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </label>
+        <label>
+          Password
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </label>
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Logging in...' : 'Log in'}
+        </button>
+        <p>
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
+      </form>
+    </div>
   )
 }
 

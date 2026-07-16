@@ -13,9 +13,9 @@ function CheckoutForm({ onSubmit, submitting, allDigital }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="checkout-form">
       {!allDigital && (
-        <label>
+        <label className="form-field">
           Shipping address
           <textarea
             value={shippingAddress}

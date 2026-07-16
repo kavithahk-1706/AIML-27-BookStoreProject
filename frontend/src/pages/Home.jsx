@@ -20,8 +20,7 @@ function Home() {
   const categoryId = searchParams.get('categoryId') || ''
   const format = searchParams.get('format') || ''
   
-  // sort isn't wired up — it's listed as a stretch feature in the backend doc.
-  useEffect(() => {
+  function fetchBooks() {
     setLoading(true)
     setError(false)
     getBooks({
@@ -37,7 +36,10 @@ function Home() {
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false))
-  }, [page, search, categoryId, format])
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchBooks() }, [page, search, categoryId, format])
 
   function updateParams(next) {
     const merged = { search, categoryId, format, page: 0, ...next }
@@ -53,7 +55,7 @@ function Home() {
     <div>
       <CategoryFilter selectedCategoryId={categoryId} onChange={(id) => updateParams({ categoryId: id, page: 0 })} />
       <FormatFilter selectedFormat={format} onChange={(f) => updateParams({ format: f, page: 0 })} />
-      <BookGrid books={books} loading={loading} error={error} />
+      <BookGrid books={books} loading={loading} error={error} onRetry={fetchBooks} />
       <Pagination page={page} totalPages={totalPages} onPageChange={(p) => updateParams({ page: p })} />
     </div>
   )

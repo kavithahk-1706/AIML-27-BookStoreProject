@@ -53,7 +53,7 @@ function Checkout() {
 
   if (pendingOrder) {
     return (
-      <div>
+      <div className="page-checkout">
         <h1>Payment</h1>
         <p>Order #{pendingOrder.id} — ₹{Number(pendingOrder.totalAmount).toFixed(2)}</p>
         {error && <p className="error">{error}</p>}
@@ -63,7 +63,7 @@ function Checkout() {
   }
 
   if (itemCount === 0) {
-    return <div>Your cart is empty. Add some books before checking out.</div>
+    return <div className="page-state">Your cart is empty. Add some books before checking out.</div>
   }
 
   const allDigital = items.length > 0 && items.every(
@@ -71,7 +71,7 @@ function Checkout() {
   )
 
   return (
-    <div>
+    <div className="page-checkout">
       <h1>Checkout</h1>
       {error && <p className="error">{error}</p>}
 

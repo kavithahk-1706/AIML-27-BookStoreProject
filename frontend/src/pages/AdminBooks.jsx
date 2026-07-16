@@ -60,21 +60,21 @@ function AdminBooks() {
 
   if (editingBook) {
     return (
-      <div>
+      <div className="page-admin">
         <h1>{editingBook === 'new' ? 'Add Book' : 'Edit Book'}</h1>
         {error && <p className="error">{error}</p>}
         <AdminBookForm
           initialBook={editingBook === 'new' ? null : editingBook}
           onSubmit={handleSubmit}
           submitting={submitting}
+          onCancel={() => setEditingBook(null)}
         />
-        <button onClick={() => setEditingBook(null)}>Cancel</button>
       </div>
     )
   }
 
   return (
-    <div>
+    <div className="page-admin">
       <h1>Manage Books</h1>
       {error && <p className="error">{error}</p>}
       <button onClick={() => setEditingBook('new')}>Add Book</button>

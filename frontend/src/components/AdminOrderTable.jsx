@@ -5,7 +5,7 @@ const STATUSES = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED']
 // nested `order.user` — falls back to `order.userId` if that's not present.
 function AdminOrderTable({ orders, onStatusChange, updatingId }) {
   return (
-    <table>
+    <table className="admin-table">
       <thead>
         <tr>
           <th>Order</th>

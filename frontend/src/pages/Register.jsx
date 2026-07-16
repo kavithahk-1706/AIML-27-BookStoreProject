@@ -28,28 +28,30 @@ function Register() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Register</h1>
-      {error && <p className="error">{error}</p>}
-      <label>
-        Name
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-      </label>
-      <label>
-        Email
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      </label>
-      <label>
-        Password
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </label>
-      <button type="submit" disabled={submitting}>
-        {submitting ? 'Creating account...' : 'Register'}
-      </button>
-      <p>
-        Already have an account? <Link to="/login">Log in</Link>
-      </p>
-    </form>
+    <div className="auth-page">
+      <form onSubmit={handleSubmit} className="auth-form">
+        <h1>Register</h1>
+        {error && <p className="error">{error}</p>}
+        <label>
+          Name
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        </label>
+        <label>
+          Email
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </label>
+        <label>
+          Password
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </label>
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Creating account...' : 'Register'}
+        </button>
+        <p>
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
+      </form>
+    </div>
   )
 }
 

@@ -40,10 +40,10 @@ function AdminOrders() {
     }
   }
 
-  if (loading) return <div>Loading orders...</div>
+  if (loading) return <div className="page-state">Loading orders...</div>
 
   return (
-    <div>
+    <div className="page-admin">
       <h1>Manage Orders</h1>
       {error && <p className="error">{error}</p>}
       <AdminOrderTable orders={orders} onStatusChange={handleStatusChange} updatingId={updatingId} />

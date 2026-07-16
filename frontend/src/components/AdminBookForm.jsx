@@ -3,7 +3,7 @@ import { getCategories } from '../api/categories'
 
 const FORMATS = ['PHYSICAL', 'EBOOK', 'AUDIOBOOK']
 
-function AdminBookForm({ initialBook, onSubmit, submitting }) {
+function AdminBookForm({ initialBook, onSubmit, submitting, onCancel }) {
   const [categories, setCategories] = useState([])
   const [form, setForm] = useState({
     title: initialBook?.title || '',
@@ -47,24 +47,24 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <form onSubmit={handleSubmit} className="admin-book-form">
+      <label className="form-field">
         Title
         <input value={form.title} onChange={(e) => handleChange('title', e.target.value)} required />
       </label>
-      <label>
+      <label className="form-field">
         Author
         <input value={form.author} onChange={(e) => handleChange('author', e.target.value)} required />
       </label>
-      <label>
+      <label className="form-field">
         ISBN
         <input value={form.isbn} onChange={(e) => handleChange('isbn', e.target.value)} />
       </label>
-      <label>
+      <label className="form-field">
         Description
         <textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
       </label>
-      <label>
+      <label className="form-field">
         Price
         <input
           type="number"
@@ -78,7 +78,7 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
 
       {/* stock quantity is meaningless for licenses — hide it entirely for digital formats */}
       {isPhysical && (
-        <label>
+        <label className="form-field">
           Stock quantity
           <input
             type="number"
@@ -90,7 +90,7 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
         </label>
       )}
 
-      <label>
+      <label className="form-field">
         Category
         <select value={form.categoryId} onChange={(e) => handleChange('categoryId', e.target.value)} required>
           <option value="">Select a category</option>
@@ -101,11 +101,11 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
           ))}
         </select>
       </label>
-      <label>
+      <label className="form-field">
         Image URL
         <input value={form.imageUrl} onChange={(e) => handleChange('imageUrl', e.target.value)} />
       </label>
-      <label>
+      <label className="form-field">
         Format
         <select value={form.format} onChange={(e) => handleChange('format', e.target.value)}>
           {FORMATS.map((f) => (
@@ -116,14 +116,19 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
         </select>
       </label>
       {!isPhysical && (
-        <label>
+        <label className="form-field">
           File URL
           <input value={form.fileUrl} onChange={(e) => handleChange('fileUrl', e.target.value)} required />
         </label>
       )}
-      <button type="submit" disabled={submitting}>
-        {submitting ? 'Saving...' : initialBook ? 'Update book' : 'Create book'}
-      </button>
+      <div className="admin-book-form-actions">
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Saving...' : initialBook ? 'Update book' : 'Create book'}
+        </button>
+        {onCancel && (
+          <button type="button" className="btn-cancel" onClick={onCancel}>Cancel</button>
+        )}
+      </div>
     </form>
   )
 }

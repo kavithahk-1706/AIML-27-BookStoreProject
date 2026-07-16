@@ -1,0 +1,1750 @@
+/* ============================================================
+   GLOBAL.CSS — BookStore UI
+   Dark mode default: Catppuccin Mocha
+   Light mode toggle: Clouds at Dawn
+   Import order: tokens → reset → base → layout → components
+   ============================================================ */
+
+/* ── Google Fonts ─────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap');
+
+/* ══════════════════════════════════════════════════════════
+   1. DESIGN TOKENS — Dark Mode (Catppuccin Mocha)
+   ══════════════════════════════════════════════════════════ */
+:root {
+  /* Palette */
+  --base:        #1e1e2e;
+  --mantle:      #181825;
+  --crust:       #11111b;
+  --surface-0:   #313244;
+  --surface-1:   #45475a;
+  --surface-2:   #585b70;
+  --overlay-0:   #6c7086;
+  --overlay-1:   #7f849c;
+  --subtext-0:   #a6adc8;
+  --subtext-1:   #bac2de;
+  --text:        #cdd6f4;
+  --lavender:    #b4befe;
+  --blue:        #89b4fa;
+  --sapphire:    #74c7ec;
+  --sky:         #89dceb;
+  --teal:        #94e2d5;
+  --green:       #a6e3a1;
+  --yellow:      #f9e2af;
+  --peach:       #fab387;
+  --maroon:      #eba0ac;
+  --red:         #f38ba8;
+  --mauve:       #cba6f7;
+  --pink:        #f5c2e7;
+  --flamingo:    #f2cdcd;
+  --rosewater:   #f5e0dc;
+
+  /* Semantic tokens */
+  --color-bg:          var(--base);
+  --color-surface:     var(--surface-0);
+  --color-surface-alt: var(--surface-1);
+  --color-border:      var(--surface-1);
+  --color-text:        var(--text);
+  --color-subtext:     var(--overlay-0);
+  --color-accent:      var(--mauve);
+  --color-accent-alt:  var(--sky);
+  --color-success:     var(--green);
+  --color-warning:     var(--yellow);
+  --color-error:       var(--red);
+  --color-link:        var(--blue);
+
+  /* Navbar */
+  --navbar-bg:         rgba(17, 17, 27, 0.82);
+  --navbar-border:     rgba(203, 166, 247, 0.12);
+  --navbar-blur:       blur(18px);
+
+  /* Buttons */
+  --btn-primary-bg:    var(--mauve);
+  --btn-primary-text:  var(--crust);
+  --btn-primary-hover: #d4baff;
+  --btn-ghost-border:  var(--surface-1);
+  --btn-ghost-hover:   var(--surface-0);
+  --btn-danger-bg:     var(--red);
+  --btn-danger-text:   var(--crust);
+
+  /* Cards */
+  --card-bg:           var(--surface-0);
+  --card-shadow:       0 4px 24px rgba(0, 0, 0, 0.45);
+  --card-hover-shadow: 0 8px 40px rgba(203, 166, 247, 0.18);
+  --card-radius:       12px;
+
+  /* Inputs */
+  --input-bg:          var(--mantle);
+  --input-border:      var(--surface-1);
+  --input-focus:       var(--mauve);
+  --input-text:        var(--text);
+  --input-placeholder: var(--overlay-0);
+
+  /* Format badges */
+  --badge-physical-bg:   rgba(166, 227, 161, 0.18);
+  --badge-physical-text: var(--green);
+  --badge-ebook-bg:      rgba(137, 220, 235, 0.18);
+  --badge-ebook-text:    var(--sky);
+  --badge-audio-bg:      rgba(203, 166, 247, 0.18);
+  --badge-audio-text:    var(--mauve);
+
+  /* Order status colours */
+  --status-pending-bg:    rgba(249, 226, 175, 0.15);
+  --status-pending-text:  var(--yellow);
+  --status-confirmed-bg:  rgba(137, 180, 250, 0.15);
+  --status-confirmed-text:var(--blue);
+  --status-shipped-bg:    rgba(148, 226, 213, 0.15);
+  --status-shipped-text:  var(--teal);
+  --status-delivered-bg:  rgba(166, 227, 161, 0.15);
+  --status-delivered-text:var(--green);
+  --status-cancelled-bg:  rgba(243, 139, 168, 0.15);
+  --status-cancelled-text:var(--red);
+
+  /* Misc */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', 'Inter', sans-serif;
+  --navbar-h:   64px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   2. LIGHT MODE — Clouds at Dawn
+   ══════════════════════════════════════════════════════════ */
+body.light {
+  --color-bg:          #eef4fb;
+  --color-surface:     #ffffff;
+  --color-surface-alt: #dce8f5;
+  --color-border:      #c8d8ed;
+  --color-text:        #2d3561;
+  --color-subtext:     #6e7fa3;
+  --color-accent:      #7b9ed9;
+  --color-accent-alt:  #5bbccc;
+  --color-success:     #3aaa72;
+  --color-warning:     #c9860a;
+  --color-error:       #e05c6a;
+  --color-link:        #5280c1;
+
+  --navbar-bg:         rgba(238, 244, 251, 0.85);
+  --navbar-border:     rgba(123, 158, 217, 0.2);
+
+  --btn-primary-bg:    #7b9ed9;
+  --btn-primary-text:  #ffffff;
+  --btn-primary-hover: #6089c8;
+  --btn-ghost-border:  #c8d8ed;
+  --btn-ghost-hover:   #dce8f5;
+  --btn-danger-bg:     #e05c6a;
+  --btn-danger-text:   #ffffff;
+
+  --card-bg:           #ffffff;
+  --card-shadow:       0 4px 20px rgba(45, 53, 97, 0.08);
+  --card-hover-shadow: 0 8px 36px rgba(123, 158, 217, 0.22);
+
+  --input-bg:          #f5f9ff;
+  --input-border:      #c8d8ed;
+  --input-focus:       #7b9ed9;
+  --input-text:        #2d3561;
+  --input-placeholder: #9aaec7;
+
+  --badge-physical-bg:   rgba(58, 170, 114, 0.12);
+  --badge-physical-text: #2a8a5c;
+  --badge-ebook-bg:      rgba(91, 188, 204, 0.12);
+  --badge-ebook-text:    #2e8fa0;
+  --badge-audio-bg:      rgba(123, 158, 217, 0.15);
+  --badge-audio-text:    #5280c1;
+
+  --status-pending-bg:    rgba(201, 134, 10, 0.1);
+  --status-pending-text:  #c9860a;
+  --status-confirmed-bg:  rgba(82, 128, 193, 0.1);
+  --status-confirmed-text:#5280c1;
+  --status-shipped-bg:    rgba(91, 188, 204, 0.1);
+  --status-shipped-text:  #2e8fa0;
+  --status-delivered-bg:  rgba(58, 170, 114, 0.1);
+  --status-delivered-text:#2a8a5c;
+  --status-cancelled-bg:  rgba(224, 92, 106, 0.1);
+  --status-cancelled-text:#e05c6a;
+}
+
+/* ══════════════════════════════════════════════════════════
+   3. RESET & BASE
+   ══════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s var(--transition), color 0.3s var(--transition);
+}
+
+/* Subtle starfield-ish noise texture in dark mode */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(203, 166, 247, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(137, 220, 235, 0.05) 0%, transparent 55%);
+}
+
+body.light::before {
+  background-image:
+    radial-gradient(ellipse at 15% 0%, rgba(123, 158, 217, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 100%, rgba(91, 188, 204, 0.08) 0%, transparent 60%);
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition), opacity var(--transition);
+}
+a:hover { opacity: 0.8; }
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 1.25rem; }
+h2 { font-size: clamp(1.3rem, 2.5vw, 1.7rem); margin-bottom: 1rem; }
+h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+h4 { font-size: 1rem; }
+
+p { color: var(--color-subtext); line-height: 1.65; }
+
+/* ══════════════════════════════════════════════════════════
+   4. SCROLLBAR
+   ══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--surface-2, var(--color-border));
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
+
+/* ══════════════════════════════════════════════════════════
+   5. LAYOUT — App Shell
+   ══════════════════════════════════════════════════════════ */
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem;
+}
+
+/* Generic page container used by pages below navbar */
+.page-cart,
+.page-checkout,
+.page-orders,
+.page-order-detail,
+.page-admin {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem;
+}
+
+.page-admin { max-width: 1100px; }
+
+/* Full-page state message (loading / empty / error) */
+.page-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  font-size: 1.05rem;
+  color: var(--color-subtext);
+  font-style: italic;
+  padding-top: var(--navbar-h);
+}
+
+.page-state.error { color: var(--color-error); font-style: normal; font-weight: 500; }
+
+/* ══════════════════════════════════════════════════════════
+   6. NAVBAR
+   ══════════════════════════════════════════════════════════ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--navbar-h);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 2rem;
+  background: var(--navbar-bg);
+  border-bottom: 1px solid var(--navbar-border);
+  backdrop-filter: var(--navbar-blur);
+  -webkit-backdrop-filter: var(--navbar-blur);
+}
+
+/* Brand / logo link */
+.navbar > a:first-child {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.navbar > a:first-child:hover { opacity: 1; color: var(--btn-primary-hover, var(--color-accent)); }
+
+/* Search bar takes available middle space */
+.navbar .search-bar { flex: 1; min-width: 0; max-width: 480px; margin: 0 auto; }
+
+/* Nav links cluster */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+}
+
+.navbar-links a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-subtext);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.navbar-links a:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+  opacity: 1;
+}
+
+.navbar-links span {
+  font-size: 0.85rem;
+  color: var(--color-subtext);
+  padding: 0 0.25rem;
+}
+
+.navbar-links button {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-subtext);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.navbar-links button:hover {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--crust, #11111b);
+}
+
+/* ══════════════════════════════════════════════════════════
+   7. SEARCH BAR
+   ══════════════════════════════════════════════════════════ */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.search-bar:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.15);
+}
+body.light .search-bar:focus-within {
+  box-shadow: 0 0 0 3px rgba(123, 158, 217, 0.18);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--input-text);
+  font-size: 0.9rem;
+  padding: 0.5rem 0.9rem;
+  outline: none;
+  min-width: 0;
+  font-family: var(--font-sans);
+}
+.search-bar input::placeholder { color: var(--input-placeholder); }
+
+.search-bar button {
+  flex-shrink: 0;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition);
+  font-family: var(--font-sans);
+}
+.search-bar button:hover { background: var(--btn-primary-hover); }
+
+/* ══════════════════════════════════════════════════════════
+   8. HOME PAGE — Filter bar
+   ══════════════════════════════════════════════════════════ */
+
+/* Home wraps content after the navbar */
+.home-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem;
+}
+
+/* Home's root div has no className — target it directly as the only
+   classless div that is a direct child of #root. Every other page's
+   root div now has an explicit class (page-cart, page-checkout, etc.)
+   or is auth-page, so this selector is Home-only. */
+#root > div:not([class]) {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem;
+}
+
+/* Filter row — CategoryFilter and FormatFilter selects sit inside Home's root div */
+#root > div:not([class]) > select {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  outline: none;
+  margin-right: 0.6rem;
+  margin-bottom: 1.25rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236c7086' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.25rem;
+}
+
+#root > div > div:first-child > select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.12);
+}
+
+/* Option list theming — limited cross-browser support (works in Firefox +
+   Chromium; Safari ignores background/color on <option> entirely).
+   Targets every styled select in the app: home filters, admin dropdowns,
+   form-field selects, and the admin order status select. */
+select option,
+.form-field select option,
+.admin-table td select option,
+.page-admin table td select option {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+}
+
+/* Hovered / focused option — supported in Firefox only */
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+body.light select option,
+body.light .form-field select option,
+body.light .admin-table td select option,
+body.light .page-admin table td select option {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+}
+
+body.light select option:hover,
+body.light select option:focus,
+body.light select option:checked {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   9. BOOK GRID
+   ══════════════════════════════════════════════════════════ */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+/* ══════════════════════════════════════════════════════════
+   10. BOOK CARD
+   ══════════════════════════════════════════════════════════ */
+.book-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  border: 1px solid transparent;
+  padding: 1rem;
+  text-decoration: none;
+  color: var(--color-text);
+  box-shadow: var(--card-shadow);
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow var(--transition),
+    border-color var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.book-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  background: linear-gradient(135deg, rgba(203, 166, 247, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.book-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: var(--card-hover-shadow);
+  border-color: rgba(203, 166, 247, 0.25);
+  opacity: 1;
+}
+
+.book-card:hover::before { opacity: 1; }
+
+.book-card img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-alt);
+}
+
+.book-card h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.book-card p {
+  font-size: 0.82rem;
+  color: var(--color-subtext);
+  margin: 0;
+}
+
+/* Price — last <p> inside book-card */
+.book-card p:last-child {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+/* ══════════════════════════════════════════════════════════
+   11. FORMAT BADGE
+   ══════════════════════════════════════════════════════════ */
+.format-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 99px;
+  width: fit-content;
+}
+
+.format-badge--physical {
+  background: var(--badge-physical-bg);
+  color: var(--badge-physical-text);
+}
+.format-badge--ebook {
+  background: var(--badge-ebook-bg);
+  color: var(--badge-ebook-text);
+}
+.format-badge--audiobook {
+  background: var(--badge-audio-bg);
+  color: var(--badge-audio-text);
+}
+
+/* ══════════════════════════════════════════════════════════
+   12. PAGINATION
+   ══════════════════════════════════════════════════════════ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-bottom: 1rem;
+}
+
+.pagination button {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--crust, #11111b);
+}
+
+.pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 0.88rem;
+  color: var(--color-subtext);
+  min-width: 100px;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════
+   13. AUTH PAGES — Login & Register
+   ══════════════════════════════════════════════════════════ */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background: var(--color-bg);
+}
+
+.auth-form {
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2.25rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-form::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: -60px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(203, 166, 247, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.auth-form h1 {
+  font-size: 1.65rem;
+  margin-bottom: 0;
+}
+
+.auth-form > p {
+  font-size: 0.9rem;
+  color: var(--color-subtext);
+  margin: 0;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-subtext);
+}
+
+.auth-form input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-md);
+  outline: none;
+  width: 100%;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.auth-form input::placeholder { color: var(--input-placeholder); }
+.auth-form input:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.12);
+}
+body.light .auth-form input:focus {
+  box-shadow: 0 0 0 3px rgba(123, 158, 217, 0.18);
+}
+
+.auth-form button[type='submit'] {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--transition), transform 0.1s;
+  margin-top: 0.25rem;
+}
+.auth-form button[type='submit']:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+}
+.auth-form button[type='submit']:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   14. FORM FIELD — shared label+input/textarea layout
+   ══════════════════════════════════════════════════════════ */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-subtext);
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-md);
+  outline: none;
+  width: 100%;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  resize: vertical;
+}
+.form-field input::placeholder,
+.form-field textarea::placeholder { color: var(--input-placeholder); }
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.12);
+}
+
+/* ══════════════════════════════════════════════════════════
+   15. CHECKOUT & PAYMENT FORMS
+   ══════════════════════════════════════════════════════════ */
+.checkout-form,
+.payment-form {
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--card-shadow);
+  margin-top: 1.5rem;
+}
+
+.checkout-form button[type='submit'],
+.payment-form button[type='submit'] {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--transition), transform 0.1s;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}
+.checkout-form button[type='submit']:hover:not(:disabled),
+.payment-form button[type='submit']:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+}
+.checkout-form button[type='submit']:disabled,
+.payment-form button[type='submit']:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.payment-form > p:not(.error) {
+  font-size: 0.8rem;
+  color: var(--color-subtext);
+  font-style: italic;
+  padding: 0.5rem 0.75rem;
+  background: rgba(203, 166, 247, 0.06);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-accent);
+}
+
+/* Checkout summary list */
+.checkout-summary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.checkout-summary p {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  display: flex;
+  justify-content: space-between;
+}
+.checkout-summary p:last-child {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 0.4rem;
+}
+
+/* Page checkout h1 */
+.page-checkout h1,
+.page-cart h1,
+.page-orders h1,
+.page-order-detail h1,
+.page-admin h1 {
+  font-size: clamp(1.4rem, 2.8vw, 2rem);
+  margin-bottom: 1.5rem;
+}
+
+/* ══════════════════════════════════════════════════════════
+   16. CART PAGE
+   ══════════════════════════════════════════════════════════ */
+.page-cart {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Cart Item ─────────────────────────────────────────────── */
+.cart-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--card-shadow);
+  transition: border-color var(--transition);
+}
+.cart-item:hover { border-color: rgba(203, 166, 247, 0.25); }
+
+.cart-item img {
+  width: 70px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  background: var(--color-surface-alt);
+}
+
+.cart-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.cart-item-details h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.cart-item-details p {
+  font-size: 0.85rem;
+  color: var(--color-subtext);
+  margin: 0;
+}
+
+/* price — last p in details */
+.cart-item-details p:last-child {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.cart-item-quantity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--color-subtext);
+  flex-shrink: 0;
+}
+
+.cart-item-quantity input[type='number'] {
+  width: 60px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  outline: none;
+  font-family: var(--font-sans);
+  transition: border-color var(--transition);
+}
+.cart-item-quantity input[type='number']:focus { border-color: var(--color-accent); }
+
+/* Remove button on cart item */
+.cart-item > button {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-subtext);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  align-self: flex-start;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.cart-item > button:hover {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--crust, #11111b);
+}
+
+/* ── Cart Summary ──────────────────────────────────────────── */
+.cart-summary {
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  box-shadow: var(--card-shadow);
+}
+
+.cart-summary-count {
+  font-size: 0.9rem;
+  color: var(--color-subtext) !important;
+  margin: 0;
+}
+
+.cart-summary-total {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: var(--color-accent) !important;
+  margin: 0;
+}
+
+.cart-summary button {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--transition), transform 0.1s;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+.cart-summary button:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+}
+.cart-summary button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   17. ORDERS PAGE
+   ══════════════════════════════════════════════════════════ */
+.order-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.85rem;
+  text-decoration: none;
+  color: var(--color-text);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+.order-card:hover {
+  transform: translateX(4px);
+  border-color: rgba(203, 166, 247, 0.3);
+  box-shadow: var(--card-hover-shadow);
+  opacity: 1;
+}
+.order-card span {
+  font-size: 0.9rem;
+  color: var(--color-subtext);
+}
+.order-card span:first-child {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+.order-card span:last-child {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* Order status badges — shared by OrderCard + OrderDetail */
+.order-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.65rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.order-status--pending   { background: var(--status-pending-bg);   color: var(--status-pending-text); }
+.order-status--confirmed { background: var(--status-confirmed-bg);  color: var(--status-confirmed-text); }
+.order-status--shipped   { background: var(--status-shipped-bg);    color: var(--status-shipped-text); }
+.order-status--delivered { background: var(--status-delivered-bg);  color: var(--status-delivered-text); }
+.order-status--cancelled { background: var(--status-cancelled-bg);  color: var(--status-cancelled-text); }
+
+/* ══════════════════════════════════════════════════════════
+   18. ORDER DETAIL PAGE
+   ══════════════════════════════════════════════════════════ */
+.page-order-detail > p {
+  color: var(--color-subtext);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* The order-status pill used as a <p> in OrderDetail */
+.page-order-detail > p.order-status {
+  margin-bottom: 1rem;
+  width: fit-content;
+}
+
+.order-items {
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 1.25rem 1.5rem;
+  margin: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: var(--card-shadow);
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.order-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.order-item a {
+  color: var(--color-link);
+  font-weight: 500;
+  text-decoration: none;
+}
+.order-item a:hover { text-decoration: underline; opacity: 1; }
+
+.order-item span { color: var(--color-subtext); font-size: 0.85rem; }
+.order-item span:first-of-type { color: var(--color-text); font-weight: 500; }
+
+/* Total line in order detail */
+.page-order-detail > p:last-child {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+/* ══════════════════════════════════════════════════════════
+   19. BOOK DETAIL PAGE
+   ══════════════════════════════════════════════════════════ */
+
+/* Page shell — two-column flex */
+.page-book-detail {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-h) + 3rem) 1.5rem 5rem;
+  display: flex;
+  gap: 3.5rem;
+  align-items: flex-start;
+}
+
+/* ── Left column: cover ──────────────────────────────────── */
+.book-detail-cover {
+  flex: 0 0 320px;
+  position: sticky;
+  top: calc(var(--navbar-h) + 2rem);
+}
+
+.book-detail-cover img {
+  width: 100%;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow), 0 16px 56px rgba(0, 0, 0, 0.5);
+  background: var(--color-surface);
+  display: block;
+  animation: fadeUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Placeholder block when no imageUrl */
+.book-detail-cover--empty {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: var(--color-surface);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--color-border);
+}
+
+/* ── Right column: info ──────────────────────────────────── */
+.book-detail-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  animation: fadeUp 0.4s 0.08s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.book-detail-info h1 {
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.15;
+  margin-bottom: 0;
+  letter-spacing: -0.02em;
+}
+
+.book-detail-author {
+  font-size: 1.05rem !important;
+  color: var(--color-subtext) !important;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.book-detail-price {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: var(--color-accent) !important;
+  font-family: var(--font-display) !important;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1;
+}
+
+.book-detail-description {
+  font-size: 0.95rem !important;
+  color: var(--color-subtext) !important;
+  line-height: 1.8 !important;
+  margin: 0;
+  max-width: 58ch;
+}
+
+/* ── Stock status pill ───────────────────────────────────── */
+.stock-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.28rem 0.8rem;
+  border-radius: 99px;
+  width: fit-content;
+}
+
+.stock-pill::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.stock-pill--in {
+  background: rgba(166, 227, 161, 0.14);
+  color: var(--color-success);
+  border: 1px solid rgba(166, 227, 161, 0.25);
+}
+
+.stock-pill--out {
+  background: rgba(243, 139, 168, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(243, 139, 168, 0.2);
+}
+
+body.light .stock-pill--in {
+  background: rgba(58, 170, 114, 0.1);
+  border-color: rgba(58, 170, 114, 0.25);
+}
+body.light .stock-pill--out {
+  background: rgba(224, 92, 106, 0.08);
+  border-color: rgba(224, 92, 106, 0.2);
+}
+
+/* ── Action buttons area ─────────────────────────────────── */
+.book-detail-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* ══════════════════════════════════════════════════════════
+   19b. GLOBAL BUTTON PRIMITIVES — btn-primary / btn-secondary
+   (defined here, reusable across all pages going forward)
+   ══════════════════════════════════════════════════════════ */
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.8rem 2.25rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow var(--transition);
+  min-width: 180px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  box-shadow: 0 3px 14px rgba(203, 166, 247, 0.3);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(203, 166, 247, 0.4);
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(203, 166, 247, 0.25);
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1.5px solid var(--color-accent);
+  box-shadow: none;
+}
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(203, 166, 247, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(203, 166, 247, 0.15);
+}
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+body.light .btn-secondary {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+body.light .btn-secondary:hover:not(:disabled) {
+  background: rgba(123, 158, 217, 0.1);
+}
+
+/* ── Book detail responsive ──────────────────────────────── */
+@media (max-width: 720px) {
+  .page-book-detail {
+    flex-direction: column;
+    gap: 2rem;
+    padding-top: calc(var(--navbar-h) + 1.75rem);
+  }
+
+  .book-detail-cover {
+    flex: none;
+    width: 100%;
+    max-width: 240px;
+    position: static;
+    margin: 0 auto;
+  }
+
+  .book-detail-description {
+    max-width: 100%;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .book-detail-actions {
+    align-items: stretch;
+  }
+}
+
+
+.page-cart,
+.page-checkout,
+.page-orders,
+.page-order-detail,
+.page-admin,
+.auth-page {
+  max-width: unset;
+  padding: unset;
+  margin: unset;
+}
+
+.page-cart        { max-width: 900px;  margin: 0 auto; padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem; }
+.page-checkout    { max-width: 680px;  margin: 0 auto; padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem; }
+.page-orders      { max-width: 760px;  margin: 0 auto; padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem; }
+.page-order-detail{ max-width: 760px;  margin: 0 auto; padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem; }
+.page-admin       { max-width: 1100px; margin: 0 auto; padding: calc(var(--navbar-h) + 2rem) 1.5rem 4rem; }
+
+
+
+/* ══════════════════════════════════════════════════════════
+   20. ADMIN PAGES
+   ══════════════════════════════════════════════════════════ */
+/* Add Book / Edit Book buttons */
+.page-admin > button {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--transition), transform 0.1s;
+  margin-bottom: 1.5rem;
+}
+.page-admin > button:hover { background: var(--btn-primary-hover); transform: translateY(-1px); }
+
+/* Cancel button in edit mode */
+.page-admin > button:last-of-type:not(:first-of-type) {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-subtext);
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+.page-admin > button:last-of-type:not(:first-of-type):hover {
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  transform: none;
+}
+
+/* ── Admin Book Form ───────────────────────────────────────── */
+.admin-book-form {
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  box-shadow: var(--card-shadow);
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.admin-book-form .form-field:has(textarea) { grid-column: 1 / -1; }
+.admin-book-form .form-field:first-child   { grid-column: 1 / -1; }
+
+.page-admin:has(.admin-book-form) h1 {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.admin-book-form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.admin-book-form-actions button[type='submit'] {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--transition), transform 0.1s;
+}
+
+.admin-book-form-actions button[type='submit']:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+}
+
+.admin-book-form-actions button[type='submit']:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-cancel {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.7rem 1.75rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 3px 14px rgba(203, 166, 247, 0.3);
+  transition:
+    background var(--transition),
+    transform 0.1s,
+    box-shadow var(--transition);
+}
+
+.btn-cancel:hover {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(203, 166, 247, 0.4);
+}
+
+
+
+/* ── Admin Tables ──────────────────────────────────────────── */
+.admin-table,
+.page-admin table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 1.5rem;
+}
+
+.admin-table thead tr,
+.page-admin table thead tr {
+  background: var(--color-surface);
+}
+
+.admin-table th,
+.page-admin table th {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table td,
+.page-admin table td {
+  padding: 0.85rem 1.1rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td,
+.page-admin table tbody tr:last-child td { border-bottom: none; }
+
+.admin-table tbody tr:hover td,
+.page-admin table tbody tr:hover td {
+  background: rgba(203, 166, 247, 0.04);
+}
+
+/* Edit / Delete buttons inside admin table */
+.admin-table td button,
+.page-admin table td button {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  margin-right: 0.4rem;
+  background: transparent;
+  color: var(--color-subtext);
+}
+.admin-table td button:first-child,
+.page-admin table td button:first-child {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.admin-table td button:first-child:hover,
+.page-admin table td button:first-child:hover {
+  background: var(--color-accent);
+  color: var(--crust, #11111b);
+}
+.admin-table td button:last-child:not(:first-child),
+.page-admin table td button:last-child:not(:first-child) {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+.admin-table td button:last-child:not(:first-child):hover,
+.page-admin table td button:last-child:not(:first-child):hover {
+  background: var(--color-error);
+  color: var(--crust, #11111b);
+}
+
+/* Status dropdown in AdminOrderTable */
+.admin-table td select,
+.page-admin table td select {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  padding: 0.3rem 2rem 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236c7086' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  transition: border-color var(--transition);
+}
+.admin-table td select:focus,
+.page-admin table td select:focus { border-color: var(--color-accent); }
+.admin-table td select:disabled,
+.page-admin table td select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ══════════════════════════════════════════════════════════
+   21. ERROR & SUCCESS MESSAGES
+   ══════════════════════════════════════════════════════════ */
+.error {
+  color: var(--color-error) !important;
+  font-size: 0.88rem !important;
+  font-weight: 500;
+  padding: 0.6rem 0.9rem;
+  background: rgba(243, 139, 168, 0.1);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-error);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   22. THEME TOGGLE BUTTON (floating)
+   ══════════════════════════════════════════════════════════ */
+.theme-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--card-bg);
+  color: var(--color-text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.theme-toggle:hover {
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 6px 24px rgba(203, 166, 247, 0.25);
+}
+
+/* ══════════════════════════════════════════════════════════
+   23. LOADING SHIMMER (for book-grid loading states)
+   ══════════════════════════════════════════════════════════ */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   24. MICRO-ANIMATIONS
+   ══════════════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.book-card,
+.order-card,
+.cart-item,
+.auth-form,
+.checkout-form,
+.payment-form,
+.admin-book-form,
+.cart-summary,
+.order-items {
+  animation: fadeUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Stagger book cards */
+.book-grid .book-card:nth-child(1)  { animation-delay: 0.02s; }
+.book-grid .book-card:nth-child(2)  { animation-delay: 0.05s; }
+.book-grid .book-card:nth-child(3)  { animation-delay: 0.08s; }
+.book-grid .book-card:nth-child(4)  { animation-delay: 0.11s; }
+.book-grid .book-card:nth-child(5)  { animation-delay: 0.14s; }
+.book-grid .book-card:nth-child(6)  { animation-delay: 0.17s; }
+.book-grid .book-card:nth-child(7)  { animation-delay: 0.20s; }
+.book-grid .book-card:nth-child(8)  { animation-delay: 0.23s; }
+.book-grid .book-card:nth-child(9)  { animation-delay: 0.26s; }
+.book-grid .book-card:nth-child(10) { animation-delay: 0.29s; }
+
+/* ══════════════════════════════════════════════════════════
+   25. RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .navbar { padding: 0 1rem; gap: 0.6rem; }
+  .navbar-links { gap: 0.35rem; }
+  .navbar-links a { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
+
+  .book-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 1rem; }
+
+  .admin-book-form { grid-template-columns: 1fr; }
+  .admin-book-form .form-field:first-child { grid-column: 1; }
+
+  .cart-item { flex-wrap: wrap; }
+  .cart-item img { width: 55px; height: 80px; }
+
+  .order-card { flex-wrap: wrap; gap: 0.5rem; }
+
+  #root > div > div:not([class]) > img {
+    float: none;
+    margin-right: 0;
+    width: 140px;
+    margin-bottom: 1.25rem;
+  }
+
+  .auth-form { padding: 1.75rem 1.25rem; }
+  .checkout-form, .payment-form { padding: 1.25rem; }
+  .page-admin table { font-size: 0.82rem; }
+  .page-admin table th, .page-admin table td { padding: 0.65rem 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  .navbar .search-bar { max-width: none; }
+  .book-grid { grid-template-columns: repeat(2, 1fr); }
+}

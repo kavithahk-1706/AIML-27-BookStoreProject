@@ -28,12 +28,12 @@ function OrderDetail() {
       .finally(() => setLoading(false))
   }, [id])
 
-  if (loading) return <div>Loading order...</div>
-  if (error) return <div>{error}</div>
+  if (loading) return <div className="page-state">Loading order...</div>
+  if (error) return <div className="page-state error">{error}</div>
   if (!order) return null
 
   return (
-    <div>
+    <div className="page-order-detail">
       <h1>Order #{order.id}</h1>
       <p className={`order-status order-status--${order.status.toLowerCase()}`}>{order.status}</p>
       <p>Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
