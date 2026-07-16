@@ -11,7 +11,7 @@ function Navbar() {
 
   function handleLogout() {
     logout()
-    navigate('/')
+    navigate('/', { replace: true, state: {} }) // wipe state so stale `from` can't survive
   }
 
   // Pulls the current ?search= value only when already on the home page, so

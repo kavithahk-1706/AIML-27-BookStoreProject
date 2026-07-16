@@ -22,6 +22,7 @@ public class OrderItemResponse {
                 item.getBook().getId(),
                 item.getBook().getTitle(),
                 item.getBook().getAuthor(),
+                item.getBook().getFormat(),
                 item.getBook().getImageUrl(),
                 item.getBook().getPrice()
         );

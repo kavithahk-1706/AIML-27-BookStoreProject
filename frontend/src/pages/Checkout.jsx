@@ -66,6 +66,10 @@ function Checkout() {
     return <div>Your cart is empty. Add some books before checking out.</div>
   }
 
+  const allDigital = items.length > 0 && items.every(
+    (item) => item.book?.format === 'EBOOK' || item.book?.format === 'AUDIOBOOK'
+  )
+
   return (
     <div>
       <h1>Checkout</h1>
@@ -80,7 +84,7 @@ function Checkout() {
         <p>Total: ₹{Number(total).toFixed(2)}</p>
       </div>
 
-      <CheckoutForm onSubmit={handlePlaceOrder} submitting={submitting} />
+      <CheckoutForm onSubmit={handlePlaceOrder} submitting={submitting} allDigital={allDigital} />
     </div>
   )
 }

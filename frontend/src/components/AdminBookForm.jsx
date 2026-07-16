@@ -3,7 +3,6 @@ import { getCategories } from '../api/categories'
 
 const FORMATS = ['PHYSICAL', 'EBOOK', 'AUDIOBOOK']
 
-// initialBook = null means "create" mode; passing a book means "edit" mode.
 function AdminBookForm({ initialBook, onSubmit, submitting }) {
   const [categories, setCategories] = useState([])
   const [form, setForm] = useState({
@@ -27,6 +26,8 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
+  const isPhysical = form.format === 'PHYSICAL'
+
   function handleSubmit(e) {
     e.preventDefault()
     onSubmit({
@@ -35,11 +36,13 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
       isbn: form.isbn,
       description: form.description,
       price: Number(form.price),
-      stockQuantity: Number(form.stockQuantity),
+      // don't send stockQuantity for digital — backend ignores it anyway
+      // but contract says don't require it, so we just omit it entirely
+      stockQuantity: isPhysical ? Number(form.stockQuantity) : undefined,
       categoryId: form.categoryId ? Number(form.categoryId) : null,
       imageUrl: form.imageUrl || null,
       format: form.format,
-      fileUrl: form.format === 'PHYSICAL' ? null : form.fileUrl,
+      fileUrl: isPhysical ? null : form.fileUrl,
     })
   }
 
@@ -72,16 +75,21 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
           required
         />
       </label>
-      <label>
-        Stock quantity
-        <input
-          type="number"
-          min="0"
-          value={form.stockQuantity}
-          onChange={(e) => handleChange('stockQuantity', e.target.value)}
-          required
-        />
-      </label>
+
+      {/* stock quantity is meaningless for licenses — hide it entirely for digital formats */}
+      {isPhysical && (
+        <label>
+          Stock quantity
+          <input
+            type="number"
+            min="0"
+            value={form.stockQuantity}
+            onChange={(e) => handleChange('stockQuantity', e.target.value)}
+            required
+          />
+        </label>
+      )}
+
       <label>
         Category
         <select value={form.categoryId} onChange={(e) => handleChange('categoryId', e.target.value)} required>
@@ -107,7 +115,7 @@ function AdminBookForm({ initialBook, onSubmit, submitting }) {
           ))}
         </select>
       </label>
-      {form.format !== 'PHYSICAL' && (
+      {!isPhysical && (
         <label>
           File URL
           <input value={form.fileUrl} onChange={(e) => handleChange('fileUrl', e.target.value)} required />

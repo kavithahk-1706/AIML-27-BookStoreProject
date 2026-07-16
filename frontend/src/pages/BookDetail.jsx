@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import { getBook, downloadBook } from '../api/books'
+import { getBook, downloadBook, getPurchaseStatus } from '../api/books'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import FormatBadge from '../components/FormatBadge'
@@ -16,19 +16,24 @@ function BookDetail() {
   const [error, setError] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState(null)
+  const [purchased, setPurchased] = useState(false)
 
   useEffect(() => {
     setLoading(true)
     setError(false)
+    setPurchased(false)
     getBook(id)
-      .then(setBook)
+      .then((fetchedBook) => {
+        setBook(fetchedBook)
+        const isDigital = fetchedBook.format === 'EBOOK' || fetchedBook.format === 'AUDIOBOOK'
+        if (isAuthenticated && isDigital) {
+          return getPurchaseStatus(id).then((res) => setPurchased(res.purchased))
+        }
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false))
-  }, [id])
+  }, [id, isAuthenticated])
 
-  // If not logged in, bounce to /login instead of letting the request 401
-  // silently. Same redirect-with-`from` pattern ProtectedRoute already uses,
-  // so Login.jsx's existing `from` handling sends them right back here after.
   function handleAddToCart() {
     if (!isAuthenticated) {
       navigate('/login', { state: { from: location } })
@@ -37,10 +42,6 @@ function BookDetail() {
     addItem(book.id, 1)
   }
 
-  // No separate "did the user buy this" check against order history here —
-  // the backend already gates on CONFIRMED/DELIVERED order status, and a second
-  // independent frontend check risks drifting out of sync with that logic.
-  // We just call the endpoint and handle the 403 gracefully.
   async function handleDownload() {
     setDownloading(true)
     setDownloadError(null)
@@ -54,7 +55,7 @@ function BookDetail() {
       link.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
-      if (err.response && err.response.status === 403) {
+      if (err.response?.status === 403) {
         setDownloadError('You need to purchase this book before you can download it.')
       } else {
         setDownloadError('Something went wrong. Please try again.')
@@ -77,19 +78,28 @@ function BookDetail() {
       <FormatBadge format={book.format} />
       <p>₹{Number(book.price).toFixed(2)}</p>
       <p>{book.description}</p>
-      <p>{book.stockQuantity > 0 ? `${book.stockQuantity} in stock` : 'Out of stock'}</p>
 
-      <button onClick={handleAddToCart} disabled={book.stockQuantity <= 0}>
-        Add to cart
-      </button>
+      {/* stock display only makes sense for physical books */}
+      {!isDigital && (
+        <p>{book.stockQuantity > 0 ? `${book.stockQuantity} in stock` : 'Out of stock'}</p>
+      )}
 
-      {isDigital && isAuthenticated && (
+      {isDigital && purchased ? (
+        // already owns it — show read/listen, never add to cart
         <div>
           <button onClick={handleDownload} disabled={downloading}>
-            {downloading ? 'Preparing...' : book.format === 'AUDIOBOOK' ? 'Listen' : 'Download'}
+            {downloading ? 'Preparing...' : book.format === 'AUDIOBOOK' ? 'Listen' : 'Read'}
           </button>
           {downloadError && <p className="error">{downloadError}</p>}
         </div>
+      ) : (
+        // physical, or digital not yet purchased — show add to cart
+        <button
+          onClick={handleAddToCart}
+          disabled={!isDigital && book.stockQuantity <= 0}
+        >
+          Add to cart
+        </button>
       )}
     </div>
   )
