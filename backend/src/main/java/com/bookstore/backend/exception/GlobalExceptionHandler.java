@@ -71,4 +71,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiError("INTERNAL_ERROR", "Something went wrong on our end"));
     }
+    @ExceptionHandler(BookNotPurchasedException.class)
+    public ResponseEntity<ApiError> handleBookNotPurchased(BookNotPurchasedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiError("NOT_PURCHASED", ex.getMessage()));
+    }
+
+    @ExceptionHandler(BookNotDigitalException.class)
+    public ResponseEntity<ApiError> handleBookNotDigital(BookNotDigitalException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError("NOT_DIGITAL", ex.getMessage()));
+    }
+    
+    @ExceptionHandler(InvalidBookRequestException.class)
+    public ResponseEntity<ApiError> handleInvalidBookRequest(InvalidBookRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError("INVALID_BOOK_DATA", ex.getMessage()));
+    }
 }

@@ -55,7 +55,7 @@ function Checkout() {
     return (
       <div>
         <h1>Payment</h1>
-        <p>Order #{pendingOrder.id} — ${Number(pendingOrder.totalAmount).toFixed(2)}</p>
+        <p>Order #{pendingOrder.id} — ₹{Number(pendingOrder.totalAmount).toFixed(2)}</p>
         {error && <p className="error">{error}</p>}
         <PaymentForm onSubmit={handlePay} submitting={submitting} />
       </div>
@@ -77,7 +77,7 @@ function Checkout() {
             {item.book?.title} × {item.quantity}
           </p>
         ))}
-        <p>Total: ${Number(total).toFixed(2)}</p>
+        <p>Total: ₹{Number(total).toFixed(2)}</p>
       </div>
 
       <CheckoutForm onSubmit={handlePlaceOrder} submitting={submitting} />

@@ -48,12 +48,12 @@ function OrderDetail() {
               <span>{item.book?.title}</span>
             )}
             <span> × {item.quantity}</span>
-            <span> — ${Number(item.priceAtPurchase).toFixed(2)} each</span>
+            <span> — ₹{Number(item.priceAtPurchase).toFixed(2)} each</span>
           </div>
         ))}
       </div>
 
-      <p>Total: ${Number(order.totalAmount).toFixed(2)}</p>
+      <p>Total: ₹{Number(order.totalAmount).toFixed(2)}</p>
     </div>
   )
 }

@@ -21,7 +21,7 @@ function AdminOrderTable({ orders, onStatusChange, updatingId }) {
             <td>#{order.id}</td>
             <td>{order.user?.name || `User #${order.userId}`}</td>
             <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-            <td>${Number(order.totalAmount).toFixed(2)}</td>
+            <td>₹{Number(order.totalAmount).toFixed(2)}</td>
             <td>
               <select
                 value={order.status}

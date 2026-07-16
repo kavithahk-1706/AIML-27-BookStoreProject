@@ -1,6 +1,8 @@
 package com.bookstore.backend.repository;
 
 import com.bookstore.backend.entity.Book;
+import com.bookstore.backend.entity.BookFormat;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +22,18 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             """)
     Page<Book> search(@Param("search") String search,
                        @Param("categoryId") Long categoryId,
+                       Pageable pageable);
+    
+    @Query("""
+            SELECT b FROM Book b
+            WHERE (:search IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :search, '%'))
+                                    OR LOWER(b.author) LIKE LOWER(CONCAT('%', :search, '%')))
+              AND (:categoryId IS NULL OR b.category.id = :categoryId)
+              AND (:format IS NULL OR b.format = :format)
+            """)
+    Page<Book> search(@Param("search") String search,
+                       @Param("categoryId") Long categoryId,
+                       @Param("format") BookFormat format,
                        Pageable pageable);
 
     // Atomic row-level decrement — the WHERE clause's stock check means this

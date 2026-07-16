@@ -10,7 +10,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
       <div className="cart-item-details">
         <h4>{book?.title}</h4>
         <p>{book?.author}</p>
-        <p>${Number(book?.price ?? 0).toFixed(2)}</p>
+        <p>₹{Number(book?.price ?? 0).toFixed(2)}</p>
       </div>
       <label className="cart-item-quantity">
         Qty

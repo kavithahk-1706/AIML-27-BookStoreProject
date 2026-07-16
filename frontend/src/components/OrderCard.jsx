@@ -8,7 +8,7 @@ function OrderCard({ order }) {
       <span>Order #{order.id}</span>
       <span className={`order-status order-status--${order.status.toLowerCase()}`}>{order.status}</span>
       <span>{new Date(order.createdAt).toLocaleDateString()}</span>
-      <span>${Number(order.totalAmount).toFixed(2)}</span>
+      <span>₹{Number(order.totalAmount).toFixed(2)}</span>
     </Link>
   )
 }

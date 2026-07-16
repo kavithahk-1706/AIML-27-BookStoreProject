@@ -51,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
         // enough stock, this throws and @Transactional rolls back every
         // decrement that already happened in this loop — no partial reservations.
         for (CartItem cartItem : cartItems) {
+            if (cartItem.getBook().getFormat() != BookFormat.PHYSICAL) {
+                continue; // digital items have nothing to reserve — see contract 4b
+            }
             int rowsUpdated = bookRepository.decrementStock(
                     cartItem.getBook().getId(), cartItem.getQuantity());
 
@@ -115,6 +118,9 @@ public class OrderServiceImpl implements OrderService {
 
             // release the reserved stock back — same atomic pattern as the decrement.
             for (OrderItem item : order.getItems()) {
+                if (item.getBook().getFormat() != BookFormat.PHYSICAL) {
+                    continue; // nothing was reserved for digital items — see contract 4b
+                }
                 bookRepository.incrementStock(item.getBook().getId(), item.getQuantity());
             }
         }

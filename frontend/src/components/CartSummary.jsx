@@ -6,7 +6,7 @@ function CartSummary({ total, itemCount }) {
       <p>
         {itemCount} item{itemCount === 1 ? '' : 's'}
       </p>
-      <p>Total: ${Number(total).toFixed(2)}</p>
+      <p>Total: ₹{Number(total).toFixed(2)}</p>
       <Link to="/checkout">
         <button disabled={itemCount === 0}>Proceed to checkout</button>
       </Link>

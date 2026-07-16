@@ -4,6 +4,7 @@ import com.bookstore.backend.dto.AddCartItemRequest;
 import com.bookstore.backend.dto.CartResponse;
 import com.bookstore.backend.dto.UpdateCartItemRequest;
 import com.bookstore.backend.entity.Book;
+import com.bookstore.backend.entity.BookFormat;
 import com.bookstore.backend.entity.CartItem;
 import com.bookstore.backend.entity.User;
 import com.bookstore.backend.exception.ResourceNotFoundException;
@@ -29,24 +30,29 @@ public class CartServiceImpl implements CartService {
         return CartResponse.fromEntities(items);
     }
 
+    
     @Override
     @Transactional
     public CartResponse addItem(Long userId, AddCartItemRequest request) {
         Book book = bookRepository.findById(request.getBookId())
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + request.getBookId()));
 
-        // one row per (user, book) — if it already exists, increment instead of duplicating
+        // Digital formats are licenses, not stackable inventory — quantity is
+        // always 1 regardless of what the client sent. See contract 4b.
+        boolean isDigital = book.getFormat() != BookFormat.PHYSICAL;
+
         CartItem existing = cartItemRepository.findByUserIdAndBookId(userId, request.getBookId())
                 .orElse(null);
 
         if (existing != null) {
-            existing.setQuantity(existing.getQuantity() + request.getQuantity());
+            int newQuantity = isDigital ? 1 : existing.getQuantity() + request.getQuantity();
+            existing.setQuantity(newQuantity);
             cartItemRepository.save(existing);
         } else {
             CartItem newItem = CartItem.builder()
-                    .user(User.builder().id(userId).build()) // reference-only, avoids an extra user fetch
+                    .user(User.builder().id(userId).build())
                     .book(book)
-                    .quantity(request.getQuantity())
+                    .quantity(isDigital ? 1 : request.getQuantity())
                     .build();
             cartItemRepository.save(newItem);
         }
@@ -58,6 +64,13 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public CartResponse updateItem(Long userId, Long itemId, UpdateCartItemRequest request) {
         CartItem item = getOwnedCartItem(userId, itemId);
+
+        // Digital items are quantity-locked at 1 — see contract 4b. The frontend
+        // never renders a quantity control for them, this guards direct API hits.
+        if (item.getBook().getFormat() != BookFormat.PHYSICAL) {
+            return getCart(userId);
+        }
+
         item.setQuantity(request.getQuantity());
         cartItemRepository.save(item);
         return getCart(userId);

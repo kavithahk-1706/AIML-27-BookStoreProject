@@ -101,7 +101,7 @@ function AdminBooks() {
                 <td>
                   <FormatBadge format={book.format} />
                 </td>
-                <td>${Number(book.price).toFixed(2)}</td>
+                <td>₹{Number(book.price).toFixed(2)}</td>
                 <td>{book.stockQuantity}</td>
                 <td>
                   <button onClick={() => setEditingBook(book)}>Edit</button>

@@ -8,7 +8,7 @@ function BookCard({ book }) {
       <h3>{book.title}</h3>
       <p>{book.author}</p>
       <FormatBadge format={book.format} />
-      <p>${Number(book.price).toFixed(2)}</p>
+      <p>₹{Number(book.price).toFixed(2)}</p>
     </Link>
   )
 }

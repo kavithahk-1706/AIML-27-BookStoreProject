@@ -58,6 +58,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // public endpoints
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/books/*/download").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/books/*/purchase-status").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
 
