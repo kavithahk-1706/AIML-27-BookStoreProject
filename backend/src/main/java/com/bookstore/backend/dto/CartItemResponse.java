@@ -22,6 +22,7 @@ public class CartItemResponse {
         BookSummary book = new BookSummary(
                 item.getBook().getId(),
                 item.getBook().getTitle(),
+                item.getBook().getAuthor(),
                 item.getBook().getImageUrl(),
                 item.getBook().getPrice()
         );

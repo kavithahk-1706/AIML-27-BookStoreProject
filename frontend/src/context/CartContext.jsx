@@ -25,7 +25,7 @@ export function CartProvider({ children }) {
     try {
       const res = await axiosInstance.get('/cart')
       setItems(res.data.data.items || [])
-      setTotal(res.data.data.total ?? 0)
+      setTotal(res.data.data.totalAmount ?? 0)
     } finally {
       setLoading(false)
     }

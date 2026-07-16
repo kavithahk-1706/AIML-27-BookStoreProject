@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 public class BookSummary {
     private Long id;
     private String title;
+    private String author;
     private String imageUrl;
     private BigDecimal price;
+   
 }
