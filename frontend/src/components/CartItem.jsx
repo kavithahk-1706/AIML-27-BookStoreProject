@@ -20,6 +20,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
           <input
             type="number"
             min="1"
+            max={item.book?.stockQuantity}
             value={item.quantity}
             onChange={(e) => {
               const qty = Number(e.target.value)

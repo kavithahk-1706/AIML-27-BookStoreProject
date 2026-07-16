@@ -1,15 +1,18 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-function CartSummary({ total, itemCount }) {
+function CartSummary({ total, itemCount, hasStockIssue }) {
+  const navigate = useNavigate()
+
   return (
     <div className="cart-summary">
-      <p>
-        {itemCount} item{itemCount === 1 ? '' : 's'}
-      </p>
-      <p>Total: ₹{Number(total).toFixed(2)}</p>
-      <Link to="/checkout">
-        <button disabled={itemCount === 0}>Proceed to checkout</button>
-      </Link>
+      <p>{itemCount} item{itemCount === 1 ? '' : 's'}</p>
+      <p>Total: ${Number(total).toFixed(2)}</p>
+      <button
+        disabled={itemCount === 0 || hasStockIssue}
+        onClick={() => navigate('/checkout')}
+      >
+        Proceed to checkout
+      </button>
     </div>
   )
 }

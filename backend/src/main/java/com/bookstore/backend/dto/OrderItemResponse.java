@@ -24,7 +24,8 @@ public class OrderItemResponse {
                 item.getBook().getAuthor(),
                 item.getBook().getFormat(),
                 item.getBook().getImageUrl(),
-                item.getBook().getPrice()
+                item.getBook().getPrice(),
+                item.getBook().getStockQuantity()
         );
         return new OrderItemResponse(item.getId(), book, item.getQuantity(), item.getPriceAtPurchase(), subtotal);
     }

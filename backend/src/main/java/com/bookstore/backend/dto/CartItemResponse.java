@@ -25,7 +25,8 @@ public class CartItemResponse {
                 item.getBook().getAuthor(),
                 item.getBook().getFormat(),
                 item.getBook().getImageUrl(),
-                item.getBook().getPrice()
+                item.getBook().getPrice(),
+                item.getBook().getStockQuantity()
         );
 
         return new CartItemResponse(item.getId(), book, item.getQuantity(), subtotal);

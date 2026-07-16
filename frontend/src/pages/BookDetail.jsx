@@ -85,7 +85,7 @@ function BookDetail() {
       )}
 
       {isDigital && purchased ? (
-        // already owns it — show read/listen, never add to cart
+        // already owyns it — show read/listen, never add to cart
         <div>
           <button onClick={handleDownload} disabled={downloading}>
             {downloading ? 'Preparing...' : book.format === 'AUDIOBOOK' ? 'Listen' : 'Read'}

@@ -15,5 +15,7 @@ public class BookSummary {
     private BookFormat format;
     private String imageUrl;
     private BigDecimal price;
+    private Integer stockQuantity; 
+
    
 }
