@@ -1,16 +1,21 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { createOrder } from '../api/orders'
+import { createOrder, processPayment } from '../api/orders'
 import CheckoutForm from '../components/CheckoutForm'
+import PaymentForm from '../components/PaymentForm'
 
 function Checkout() {
   const { items, total, itemCount, fetchCart } = useCart()
   const navigate = useNavigate()
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  // null = still on the shipping-address step. Once POST /orders succeeds we
+  // hold onto the created order and move to the payment step — same page,
+  // no new route, same pattern AdminBooks.jsx uses for its edit/list toggle.
+  const [pendingOrder, setPendingOrder] = useState(null)
 
-  async function handleSubmit(shippingAddress) {
+  async function handlePlaceOrder(shippingAddress) {
     setError(null)
     setSubmitting(true)
     try {
@@ -18,14 +23,43 @@ function Checkout() {
       // POST /orders clears the cart server-side (per contract) — refresh
       // CartContext so the Navbar count / cart page reflect that immediately.
       await fetchCart()
-      navigate(`/orders/${order.id}`, { replace: true })
+      setPendingOrder(order)
     } catch (err) {
-      // Covers stock-check failures (400/409) and other checkout errors from the backend.
+      // Covers stock-check failures (400) and other checkout errors from the backend.
       const message = err.response?.data?.message || 'Checkout failed. Please try again.'
       setError(message)
     } finally {
       setSubmitting(false)
     }
+  }
+
+  async function handlePay(paymentDetails) {
+    setError(null)
+    setSubmitting(true)
+    try {
+      const order = await processPayment(pendingOrder.id, paymentDetails)
+      // Both a successful and a "declined" simulated payment return 200 —
+      // the order's own status/paymentStatus tells the story, so either way
+      // we just go to the order detail page and let it render that state.
+      navigate(`/orders/${order.id}`, { replace: true })
+    } catch (err) {
+      // Covers 409 (order no longer payable) and other payment errors.
+      const message = err.response?.data?.message || 'Payment failed. Please try again.'
+      setError(message)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (pendingOrder) {
+    return (
+      <div>
+        <h1>Payment</h1>
+        <p>Order #{pendingOrder.id} — ${Number(pendingOrder.totalAmount).toFixed(2)}</p>
+        {error && <p className="error">{error}</p>}
+        <PaymentForm onSubmit={handlePay} submitting={submitting} />
+      </div>
+    )
   }
 
   if (itemCount === 0) {
@@ -46,9 +80,9 @@ function Checkout() {
         <p>Total: ${Number(total).toFixed(2)}</p>
       </div>
 
-      <CheckoutForm onSubmit={handleSubmit} submitting={submitting} />
+      <CheckoutForm onSubmit={handlePlaceOrder} submitting={submitting} />
     </div>
   )
 }
 
-export default Checkout
+export default Checkout;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { getBook, downloadBook } from '../api/books'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
@@ -7,6 +7,8 @@ import FormatBadge from '../components/FormatBadge'
 
 function BookDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
   const { isAuthenticated } = useAuth()
   const { addItem } = useCart()
   const [book, setBook] = useState(null)
@@ -23,6 +25,17 @@ function BookDetail() {
       .catch(() => setError(true))
       .finally(() => setLoading(false))
   }, [id])
+
+  // If not logged in, bounce to /login instead of letting the request 401
+  // silently. Same redirect-with-`from` pattern ProtectedRoute already uses,
+  // so Login.jsx's existing `from` handling sends them right back here after.
+  function handleAddToCart() {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: location } })
+      return
+    }
+    addItem(book.id, 1)
+  }
 
   // No separate "did the user buy this" check against order history here —
   // the backend already gates on CONFIRMED/DELIVERED order status, and a second
@@ -62,11 +75,11 @@ function BookDetail() {
       <h1>{book.title}</h1>
       <p>{book.author}</p>
       <FormatBadge format={book.format} />
-      <p>${Number(book.price).toFixed(2)}</p>
+      <p>₹{Number(book.price).toFixed(2)}</p>
       <p>{book.description}</p>
       <p>{book.stockQuantity > 0 ? `${book.stockQuantity} in stock` : 'Out of stock'}</p>
 
-      <button onClick={() => addItem(book.id, 1)} disabled={book.stockQuantity <= 0}>
+      <button onClick={handleAddToCart} disabled={book.stockQuantity <= 0}>
         Add to cart
       </button>
 

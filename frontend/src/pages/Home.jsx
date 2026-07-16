@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getBooks } from '../api/books'
 import BookGrid from '../components/BookGrid'
-import SearchBar from '../components/SearchBar'
 import CategoryFilter from '../components/CategoryFilter'
 import Pagination from '../components/Pagination'
 
@@ -48,7 +47,6 @@ function Home() {
 
   return (
     <div>
-      <SearchBar initialValue={search} onSearch={(value) => updateParams({ search: value, page: 0 })} />
       <CategoryFilter selectedCategoryId={categoryId} onChange={(id) => updateParams({ categoryId: id, page: 0 })} />
       <BookGrid books={books} loading={loading} error={error} />
       <Pagination page={page} totalPages={totalPages} onPageChange={(p) => updateParams({ page: p })} />

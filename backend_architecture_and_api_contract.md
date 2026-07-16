@@ -132,9 +132,11 @@ One row per (user, book) — enforce a unique constraint on (user_id, book_id), 
 - Reviews/ratings on books
 - Wishlist
 - Sorting (price low-high, newest, rating)
+- COD integration: that requires a whole different flow that bypasses the /payment endpoint- too much complexity for now
 
 ### Explicitly out of scope
 - **Real** payment gateway integration (Stripe, Razorpay, or otherwise) — no real money moves, no external API calls, no webhooks. A **simulated** payment step is in scope and required (see section 4a / "Simulated Payment Flow" below) — it's a self-contained endpoint on our own backend, not a third-party integration.
+
 
 **Do not start stretch features before MVP + digital delivery are fully working end-to-end.** This is the #1 way group projects run out of time.
 

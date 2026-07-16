@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
-// Every exception thrown anywhere in a controller/service ends up here and
-// gets converted into the standard { "error": ..., "message": ... } shape
-// from the API contract, with the right HTTP status code.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -41,6 +38,24 @@ public class GlobalExceptionHandler {
                 .body(new ApiError("ACCESS_DENIED", "You don't have permission to do that"));
     }
 
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ApiError> handleInsufficientStock(InsufficientStockException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError("INSUFFICIENT_STOCK", ex.getMessage()));
+    }
+
+    @ExceptionHandler(EmptyCartException.class)
+    public ResponseEntity<ApiError> handleEmptyCart(EmptyCartException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError("EMPTY_CART", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidOrderStateException.class)
+    public ResponseEntity<ApiError> handleInvalidOrderState(InvalidOrderStateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiError("INVALID_ORDER_STATE", ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
@@ -52,8 +67,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex) {
-        // Catch-all so an unexpected bug never leaks a raw stack trace to the client.
-        // Still log it — swap this println for a real logger (e.g. SLF4J) when you have a minute.
         System.err.println("Unhandled exception: " + ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiError("INTERNAL_ERROR", "Something went wrong on our end"));

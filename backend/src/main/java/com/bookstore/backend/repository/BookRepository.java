@@ -4,6 +4,7 @@ import com.bookstore.backend.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,4 +21,20 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> search(@Param("search") String search,
                        @Param("categoryId") Long categoryId,
                        Pageable pageable);
+
+    // Atomic row-level decrement — the WHERE clause's stock check means this
+    // can never take stock negative, even under concurrent checkouts hitting
+    // the last copy at the same time. Returns 0 rows updated if there wasn't
+    // enough stock; the caller checks that and throws accordingly.
+    @Modifying
+    @Query("UPDATE Book b SET b.stockQuantity = b.stockQuantity - :quantity " +
+           "WHERE b.id = :bookId AND b.stockQuantity >= :quantity")
+    int decrementStock(@Param("bookId") Long bookId, @Param("quantity") Integer quantity);
+
+    // Used to release stock back when a payment fails. Same atomic-update
+    // pattern as decrementStock, just no race condition to guard against here
+    // since we're always adding back, never risking going negative.
+    @Modifying
+    @Query("UPDATE Book b SET b.stockQuantity = b.stockQuantity + :quantity WHERE b.id = :bookId")
+    int incrementStock(@Param("bookId") Long bookId, @Param("quantity") Integer quantity);
 }

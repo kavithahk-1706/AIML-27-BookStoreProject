@@ -39,6 +39,13 @@ public class Order {
     @Builder.Default
     private OrderStatus status = OrderStatus.PENDING;
 
+    // Tracked separately from `status` — see section 4a of the contract.
+    // PENDING until the /payment endpoint is hit, then PAID or FAILED.
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status", nullable = false, length = 20)
+    @Builder.Default
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
     @Column(name = "shipping_address", length = 500)
     private String shippingAddress;
 

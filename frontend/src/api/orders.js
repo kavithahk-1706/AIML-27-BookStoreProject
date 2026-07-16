@@ -27,3 +27,12 @@ export async function updateOrderStatus(id, status) {
   const res = await axiosInstance.put(`/admin/orders/${id}/status`, { status })
   return res.data.data
 }
+
+// POST /orders/{id}/payment — simulates a payment gateway call (contract 4a).
+// Returns 200 with the updated order whether the simulated payment succeeds
+// or fails — check order.paymentStatus/order.status in the response to know
+// which happened. A genuine error (e.g. 409, order already paid/dead) throws.
+export async function processPayment(orderId, paymentDetails) {
+  const res = await axiosInstance.post(`/orders/${orderId}/payment`, paymentDetails)
+  return res.data.data
+}
