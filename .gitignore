@@ -6,3 +6,5 @@ target/
 application.properties
 .factorypath
 node_modules/
+digital-content/
+
