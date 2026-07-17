@@ -23,6 +23,7 @@ This is derived from the backend's API contract (`backend_architecture_and_api_c
 | `/orders/:id` | Order detail | yes | `GET /orders/{id}` |
 | `/admin/books` | Admin book management | ADMIN only | `GET/POST/PUT/DELETE /books` |
 | `/admin/orders` | Admin order management | ADMIN only | `GET /admin/orders`, `PUT /admin/orders/{id}/status` |
+| `/profile` | Profile | yes | `PUT /auth/me` |
 
 ## Component Breakdown (rough)
 

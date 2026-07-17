@@ -202,6 +202,22 @@ Pagination (for list endpoints): query params `?page=0&size=20`, response includ
 | POST | /auth/register | none | `{name, email, password}` | 201, user (no password) |
 | POST | /auth/login | none | `{email, password}` | 200, `{token, user}` |
 | GET | /auth/me | JWT | — | 200, current user |
+| PUT | /auth/me | JWT | `{name, email, currentPassword, newPassword?}` | 200, updated user. 
+
+`newPassword` is optional — omit to update name/email only. If provided, `currentPassword` must match the account's existing password or this returns 401. On success, if `newPassword` was provided, password is re-hashed with BCrypt before saving — plaintext is never persisted or logged, same as registration. |
+
+
+## 6a. Profile Update Flow
+
+`PUT /auth/me` lets a logged-in user update their own name, email, and optionally their password — no separate endpoint for password-only changes, same endpoint handles both.
+
+- **Body:** `{name, email, currentPassword, newPassword}`. `newPassword` is optional; if omitted, only `name`/`email` are updated.
+- **Password change requires `currentPassword`** — verified via `PasswordEncoder.matches()` against the stored hash before any update is applied. This prevents a hijacked/unattended session from silently locking the real user out. Returns `401 INVALID_CREDENTIALS` if it doesn't match (reuses the existing exception/error code from login).
+- **Email uniqueness:** if `email` differs from the current value, check `existsByEmail` the same way `register()` does, throw `DuplicateEmailException` (409) if taken.
+- **Token invalidation on email change:** since the JWT subject is the user's email (see section 5, `JwtService.generateToken`), changing email invalidates the existing token on the next request (email lookup in `CustomUserDetailsService` won't resolve). **Decision: [pick one — fill in once decided]**
+  - Option A: force re-login after email change (simpler, frontend just logs the user out and redirects to `/login` on success if email changed).
+  - Option B: issue and return a fresh token in the response (`{token, user}` same shape as `AuthResponse`), frontend swaps it into localStorage immediately, no re-login needed.
+- **Never** log or persist `currentPassword`/`newPassword` in plaintext anywhere — same rule as `PaymentRequest`, shape-validate and discard.
 
 ### Books
 | Method | Path | Auth | Notes |
