@@ -2,6 +2,7 @@ package com.bookstore.backend.service.impl;
 
 import com.bookstore.backend.dto.AuthResponse;
 import com.bookstore.backend.dto.LoginRequest;
+import com.bookstore.backend.dto.ProfileUpdateRequest;
 import com.bookstore.backend.dto.RegisterRequest;
 import com.bookstore.backend.dto.UserResponse;
 import com.bookstore.backend.entity.Role;
@@ -64,5 +65,39 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserResponse getCurrentUser(User authenticatedUser) {
         return UserResponse.fromEntity(authenticatedUser);
+    }
+    
+    @Override
+    public AuthResponse updateProfile(User currentUser, ProfileUpdateRequest request) {
+        // Re-fetch to avoid mutating a stale/detached entity from the security context
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(InvalidCredentialsException::new);
+
+        // Verify current password before ANY change is applied — same principle
+        // as everywhere else in this codebase: don't let a hijacked session
+        // silently take over the account.
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            throw new InvalidCredentialsException();
+        }
+
+        // Email uniqueness check — only if it's actually changing
+        if (!request.getEmail().equalsIgnoreCase(user.getEmail())
+                && userRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateEmailException(request.getEmail());
+        }
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+
+        if (request.getNewPassword() != null && !request.getNewPassword().isBlank()) {
+            user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        }
+
+        User saved = userRepository.save(user);
+
+        // Always issue a fresh token — keeps frontend logic branch-free regardless
+        // of whether email actually changed (see contract doc section 6a).
+        String token = jwtService.generateToken(saved);
+        return new AuthResponse(token, UserResponse.fromEntity(saved));
     }
 }

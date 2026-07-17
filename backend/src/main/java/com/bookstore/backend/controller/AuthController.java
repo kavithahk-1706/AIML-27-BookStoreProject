@@ -3,6 +3,7 @@ package com.bookstore.backend.controller;
 import com.bookstore.backend.dto.ApiResponse;
 import com.bookstore.backend.dto.AuthResponse;
 import com.bookstore.backend.dto.LoginRequest;
+import com.bookstore.backend.dto.ProfileUpdateRequest;
 import com.bookstore.backend.dto.RegisterRequest;
 import com.bookstore.backend.dto.UserResponse;
 import com.bookstore.backend.entity.User;
@@ -38,6 +39,14 @@ public class AuthController {
         // @AuthenticationPrincipal works directly here because User implements UserDetails
         // and that's the object JwtAuthFilter puts in the SecurityContext.
         UserResponse response = authService.getCurrentUser(user);
+        return ResponseEntity.ok(ApiResponse.of(response));
+    }
+    
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse<AuthResponse>> updateProfile(
+            @AuthenticationPrincipal User user,
+            @Valid @RequestBody ProfileUpdateRequest request) {
+        AuthResponse response = authService.updateProfile(user, request);
         return ResponseEntity.ok(ApiResponse.of(response));
     }
 }
