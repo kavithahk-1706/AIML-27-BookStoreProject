@@ -51,19 +51,35 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  // PUT /auth/me -> { data: { token, user } }, same shape as login.
+  // Always overwrites token + user on success — no branching on what changed.
+  async function updateProfile(name, email, currentPassword, newPassword) {
+    const payload = { name, email, currentPassword }
+    if (newPassword) payload.newPassword = newPassword // omit key entirely if blank
+
+    const res = await axiosInstance.put('/auth/me', payload)
+    const { token: newToken, user: updatedUser } = res.data.data
+    localStorage.setItem('token', newToken)
+    setToken(newToken)
+    setUser(updatedUser)
+    return updatedUser
+  }
+
   const value = {
     user,
     token,
     loading,
     isAuthenticated: !!user,
-    // Trust the backend's role field only — no separate "is admin" logic.
     isAdmin: user?.role === 'ADMIN',
     login,
     logout,
+    updateProfile, // <-- add this line
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
+
+
 
 export function useAuth() {
   const ctx = useContext(AuthContext)
@@ -72,3 +88,4 @@ export function useAuth() {
   }
   return ctx
 }
+

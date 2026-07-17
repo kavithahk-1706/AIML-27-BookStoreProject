@@ -18,6 +18,9 @@ import Orders from './pages/Orders'
 import OrderDetail from './pages/OrderDetail'
 import AdminBooks from './pages/AdminBooks'
 import AdminOrders from './pages/AdminOrders'
+import Profile from './pages/Profile'
+
+
 
 function App() {
   const [dark, setDark] = useState(true)
@@ -46,6 +49,7 @@ function App() {
               <Route path="/orders/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
               <Route path="/admin/books" element={<ProtectedRoute adminOnly><AdminBooks /></ProtectedRoute>} />
               <Route path="/admin/orders" element={<ProtectedRoute adminOnly><AdminOrders /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             </Routes>
             <Footer />
             <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">

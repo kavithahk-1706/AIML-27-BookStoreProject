@@ -60,6 +60,7 @@ function Navbar() {
               </>
             )}
             <span>{user?.name}</span>
+            <Link to="/profile">Profile</Link>
             <button onClick={handleLogout}>Log out</button>
           </>
         ) : (

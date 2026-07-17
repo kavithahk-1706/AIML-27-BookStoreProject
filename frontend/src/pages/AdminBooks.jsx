@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
-import { getBooks, createBook, updateBook, deleteBook } from '../api/books'
+import { getBooks, createBook, updateBook, deleteBook, getAdminBook } from '../api/books'
 import AdminBookForm from '../components/AdminBookForm'
 import FormatBadge from '../components/FormatBadge'
 import { useToast } from '../context/ToastContext'
+
 
 const PAGE_SIZE = 20
 
@@ -40,7 +41,7 @@ function AdminBooks() {
     if (targetId && books.length > 0) {
       const match = books.find((b) => b.id === Number(targetId))
       if (match) {
-        setEditingBook(match)
+        handleEditBook(match)
       }
       // Always clear the state once we've attempted to consume it (even if not found),
       // so it doesn't linger and unexpectedly trigger again on page change or after submit.
@@ -65,6 +66,18 @@ function AdminBooks() {
       setError(err.response?.data?.message || 'Failed to save book.')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+
+  // replace both places where setEditingBook(book) is called (the table Edit button
+  // AND the location.state auto-open useEffect):
+  async function handleEditBook(book) {
+    try {
+      const fullBook = await getAdminBook(book.id)
+      setEditingBook(fullBook)
+    } catch {
+      setError('Failed to load book details for editing.')
     }
   }
 
@@ -130,7 +143,7 @@ function AdminBooks() {
                 <td>₹{Number(book.price).toFixed(2)}</td>
                 <td>{book.stockQuantity}</td>
                 <td>
-                  <button onClick={() => setEditingBook(book)}>Edit</button>
+                  <button onClick={() => handleEditBook(book)}>Edit</button>
                   <button onClick={() => handleDelete(book.id)}>Delete</button>
                 </td>
               </tr>

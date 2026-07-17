@@ -34,3 +34,9 @@ export async function getPurchaseStatus(id) {
   const res = await axiosInstance.get(`/books/${id}/purchase-status`)
   return res.data.data // { purchased: true/false }
 }
+
+
+export async function getAdminBook(id) {
+  const res = await axiosInstance.get(`/admin/books/${id}`)
+  return res.data.data
+}
