@@ -4,6 +4,7 @@ import { getBook, downloadBook, getPurchaseStatus } from '../api/books'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import FormatBadge from '../components/FormatBadge'
+import RelatedBooks from '../components/RelatedBooks' 
 
 function BookDetail() {
   const { id } = useParams()
@@ -19,19 +20,35 @@ function BookDetail() {
   const [purchased, setPurchased] = useState(false)
 
   useEffect(() => {
+    let isMounted = true
     setLoading(true)
     setError(false)
     setPurchased(false)
-    getBook(id)
-      .then((fetchedBook) => {
+
+    async function fetchBookData() {
+      try {
+        const fetchedBook = await getBook(id)
+        if (!isMounted) return
+
         setBook(fetchedBook)
+        
         const isDigital = fetchedBook.format === 'EBOOK' || fetchedBook.format === 'AUDIOBOOK'
         if (isAuthenticated && isDigital) {
-          return getPurchaseStatus(id).then((res) => setPurchased(res.purchased))
+          const res = await getPurchaseStatus(id)
+          if (isMounted) setPurchased(res.purchased)
         }
-      })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
+      } catch (err) {
+        if (isMounted) setError(true)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    fetchBookData()
+
+    return () => {
+      isMounted = false
+    }
   }, [id, isAuthenticated])
 
   function handleAddToCart() {
@@ -72,56 +89,71 @@ function BookDetail() {
 
   return (
     <div className="page-book-detail">
-      {/* Left column: cover image */}
-      <div className="book-detail-cover">
-        {book.imageUrl
-          ? <img src={book.imageUrl} alt={book.title} />
-          : <div className="book-detail-cover--empty" />}
-      </div>
-
-      {/* Right column: all details */}
-      <div className="book-detail-info">
-        <h1>{book.title}</h1>
-        <p className="book-detail-author">{book.author}</p>
-        <FormatBadge format={book.format} />
-        <p className="book-detail-price">₹{Number(book.price).toFixed(2)}</p>
-        <p className="book-detail-description">{book.description}</p>
-
-        {/* stock display only makes sense for physical books */}
-        {!isDigital && (
-          <span className={book.stockQuantity > 0 ? 'stock-pill stock-pill--in' : 'stock-pill stock-pill--out'}>
-            {book.stockQuantity > 0 ? `${book.stockQuantity} in stock` : 'Out of stock'}
-          </span>
-        )}
-
-        <div className="book-detail-actions">
-          {isAdmin ? (
-            <button
-              className="btn-primary"
-              onClick={() => navigate('/admin/books', { state: { editBookId: book.id } })}
-            >
-              Edit Book
-            </button>
-          ) : isDigital && purchased ? (
-            // already owns it — show read/listen, never add to cart
-            <>
-              <button className="btn-secondary" onClick={handleDownload} disabled={downloading}>
-                {downloading ? 'Preparing...' : book.format === 'AUDIOBOOK' ? 'Listen' : 'Read'}
-              </button>
-              {downloadError && <p className="error">{downloadError}</p>}
-            </>
+      {/* Two-column main layout: cover + info */}
+      <div className="book-detail-main">
+        {/* Left column: cover image */}
+        <div className="book-detail-cover">
+          {book.imageUrl ? (
+            <img src={book.imageUrl} alt={book.title} />
           ) : (
-            // physical, or digital not yet purchased — show add to cart
-            <button
-              className="btn-primary"
-              onClick={handleAddToCart}
-              disabled={!isDigital && book.stockQuantity <= 0}
-            >
-              Add to cart
-            </button>
+            <div className="book-detail-cover--empty" />
           )}
         </div>
+
+        {/* Right column: all details */}
+        <div className="book-detail-info">
+          <h1>{book.title}</h1>
+          <p className="book-detail-author">{book.author}</p>
+          {book.categoryName && (
+            <p className="book-detail-category">{book.categoryName}</p>
+          )}
+          <FormatBadge format={book.format} />
+          <p className="book-detail-price">₹{Number(book.price).toFixed(2)}</p>
+          <p className="book-detail-description">{book.description}</p>
+
+          {/* stock display only makes sense for physical books */}
+          {!isDigital && (
+            <span className={book.stockQuantity > 0 ? 'stock-pill stock-pill--in' : 'stock-pill stock-pill--out'}>
+              {book.stockQuantity > 0 ? `${book.stockQuantity} in stock` : 'Out of stock'}
+            </span>
+          )}
+
+          <div className="book-detail-actions">
+            {isAdmin ? (
+              <button
+                className="btn-primary"
+                onClick={() => navigate('/admin/books', { state: { editBookId: book.id } })}
+              >
+                Edit Book
+              </button>
+            ) : isDigital && purchased ? (
+              <>
+                <button className="btn-secondary" onClick={handleDownload} disabled={downloading}>
+                  {downloading ? 'Preparing...' : book.format === 'AUDIOBOOK' ? 'Listen' : 'Read'}
+                </button>
+                {downloadError && <p className="error">{downloadError}</p>}
+              </>
+            ) : (
+              <button
+                className="btn-primary"
+                onClick={handleAddToCart}
+                disabled={!isDigital && book.stockQuantity <= 0}
+              >
+                Add to cart
+              </button>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Full-width carousel below the main layout */}
+      {book.categoryId && (
+        <RelatedBooks
+          currentBookId={book.id}
+          categoryId={book.categoryId}
+          categoryName={book.categoryName}
+        />
+      )}
     </div>
   )
 }
