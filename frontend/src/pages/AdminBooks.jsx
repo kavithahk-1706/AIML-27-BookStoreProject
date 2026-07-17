@@ -1,11 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { getBooks, createBook, updateBook, deleteBook } from '../api/books'
 import AdminBookForm from '../components/AdminBookForm'
 import FormatBadge from '../components/FormatBadge'
+import { useToast } from '../context/ToastContext'
 
 const PAGE_SIZE = 20
 
 function AdminBooks() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { showToast } = useToast()
   const [books, setBooks] = useState([])
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
@@ -29,17 +34,33 @@ function AdminBooks() {
     fetchBooks()
   }, [fetchBooks])
 
+  // Consume navigation state to auto-open editing form
+  useEffect(() => {
+    const targetId = location.state?.editBookId
+    if (targetId && books.length > 0) {
+      const match = books.find((b) => b.id === Number(targetId))
+      if (match) {
+        setEditingBook(match)
+      }
+      // Always clear the state once we've attempted to consume it (even if not found),
+      // so it doesn't linger and unexpectedly trigger again on page change or after submit.
+      navigate('/admin/books', { replace: true, state: {} })
+    }
+  }, [location.state, books, navigate])
+
   async function handleSubmit(payload) {
     setSubmitting(true)
     setError(null)
     try {
-      if (editingBook === 'new') {
+      const isNew = editingBook === 'new'
+      if (isNew) {
         await createBook(payload)
       } else {
         await updateBook(editingBook.id, payload)
       }
       setEditingBook(null)
       fetchBooks()
+      showToast(`Book ${isNew ? 'created' : 'updated'} successfully`)
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to save book.')
     } finally {
@@ -53,6 +74,7 @@ function AdminBooks() {
     try {
       await deleteBook(id)
       fetchBooks()
+      showToast('Book deleted')
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete book.')
     }
@@ -96,7 +118,11 @@ function AdminBooks() {
           <tbody>
             {books.map((book) => (
               <tr key={book.id}>
-                <td>{book.title}</td>
+                <td>
+                  <Link to={`/books/${book.id}`} className="admin-book-link">
+                    {book.title}
+                  </Link>
+                </td>
                 <td>{book.author}</td>
                 <td>
                   <FormatBadge format={book.format} />

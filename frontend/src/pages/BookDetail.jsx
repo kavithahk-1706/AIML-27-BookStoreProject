@@ -9,7 +9,7 @@ function BookDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isAdmin } = useAuth()
   const { addItem } = useCart()
   const [book, setBook] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -95,7 +95,14 @@ function BookDetail() {
         )}
 
         <div className="book-detail-actions">
-          {isDigital && purchased ? (
+          {isAdmin ? (
+            <button
+              className="btn-primary"
+              onClick={() => navigate('/admin/books', { state: { editBookId: book.id } })}
+            >
+              Edit Book
+            </button>
+          ) : isDigital && purchased ? (
             // already owns it — show read/listen, never add to cart
             <>
               <button className="btn-secondary" onClick={handleDownload} disabled={downloading}>

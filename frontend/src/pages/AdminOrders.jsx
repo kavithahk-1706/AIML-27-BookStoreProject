@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getAdminOrders, updateOrderStatus } from '../api/orders'
 import AdminOrderTable from '../components/AdminOrderTable'
+import { useToast } from '../context/ToastContext'
 
 const PAGE_SIZE = 20
 
 function AdminOrders() {
+  const { showToast } = useToast()
   const [orders, setOrders] = useState([])
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
@@ -33,6 +35,7 @@ function AdminOrders() {
     try {
       await updateOrderStatus(orderId, status)
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)))
+      showToast('Order status updated')
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update order status.')
     } finally {

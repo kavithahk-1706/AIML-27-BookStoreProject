@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import axiosInstance from '../api/axiosInstance'
 import { useAuth } from './AuthContext'
+import { useToast } from './ToastContext'
 
 const CartContext = createContext(null)
 
 export function CartProvider({ children }) {
   const { isAuthenticated } = useAuth()
+  const { showToast } = useToast()
   const [items, setItems] = useState([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -39,18 +41,21 @@ export function CartProvider({ children }) {
   async function addItem(bookId, quantity = 1) {
     await axiosInstance.post('/cart/items', { bookId, quantity })
     await fetchCart()
+    showToast('Added to cart')
   }
 
   // PUT /cart/items/{itemId}
   async function updateItem(itemId, quantity) {
     await axiosInstance.put(`/cart/items/${itemId}`, { quantity })
     await fetchCart()
+    showToast('Cart updated')
   }
 
   // DELETE /cart/items/{itemId}
   async function removeItem(itemId) {
     await axiosInstance.delete(`/cart/items/${itemId}`)
     await fetchCart()
+    showToast('Item removed')
   }
 
   // DELETE /cart — clear cart (also called after a successful checkout).

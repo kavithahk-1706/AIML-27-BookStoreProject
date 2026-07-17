@@ -1,12 +1,20 @@
+import { Link } from 'react-router-dom'
+
 function CartItem({ item, onUpdateQuantity, onRemove }) {
   const book = item.book
   const isDigital = book?.format === 'EBOOK' || book?.format === 'AUDIOBOOK'
 
   return (
     <div className="cart-item">
-      {book?.imageUrl && <img src={book.imageUrl} alt={book.title} />}
+      {book?.imageUrl && (
+        <Link to={`/books/${book.id}`}>
+          <img src={book.imageUrl} alt={book.title} />
+        </Link>
+      )}
       <div className="cart-item-details">
-        <h4>{book?.title}</h4>
+        <Link to={`/books/${book?.id}`} className="cart-item-title-link">
+          <h4>{book?.title}</h4>
+        </Link>
         <p>{book?.author}</p>
         <p>₹{Number(book?.price ?? 0).toFixed(2)}</p>
       </div>
