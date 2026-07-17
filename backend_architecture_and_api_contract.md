@@ -202,9 +202,9 @@ Pagination (for list endpoints): query params `?page=0&size=20`, response includ
 | POST | /auth/register | none | `{name, email, password}` | 201, user (no password) |
 | POST | /auth/login | none | `{email, password}` | 200, `{token, user}` |
 | GET | /auth/me | JWT | — | 200, current user |
-| PUT | /auth/me | JWT | `{name, email, currentPassword, newPassword?}` | 200, updated user. 
+| PUT | /auth/me | JWT | `{name, email, currentPassword, newPassword?}` | 200, `{token, user}` (same shape as login response) — a fresh token is always issued on success, even if email didn't change, so the frontend logic stays simple/consistent rather than branching on whether email specifically changed. <br> `newPassword` is optional — omit to update name/email only. If provided, `currentPassword` must match the account's existing password or this returns 401. On success, if `newPassword` was provided, password is re-hashed with BCrypt before saving — plaintext is never persisted or logged, same as registration.|
 
-`newPassword` is optional — omit to update name/email only. If provided, `currentPassword` must match the account's existing password or this returns 401. On success, if `newPassword` was provided, password is re-hashed with BCrypt before saving — plaintext is never persisted or logged, same as registration. |
+
 
 
 ## 6a. Profile Update Flow
@@ -214,9 +214,7 @@ Pagination (for list endpoints): query params `?page=0&size=20`, response includ
 - **Body:** `{name, email, currentPassword, newPassword}`. `newPassword` is optional; if omitted, only `name`/`email` are updated.
 - **Password change requires `currentPassword`** — verified via `PasswordEncoder.matches()` against the stored hash before any update is applied. This prevents a hijacked/unattended session from silently locking the real user out. Returns `401 INVALID_CREDENTIALS` if it doesn't match (reuses the existing exception/error code from login).
 - **Email uniqueness:** if `email` differs from the current value, check `existsByEmail` the same way `register()` does, throw `DuplicateEmailException` (409) if taken.
-- **Token invalidation on email change:** since the JWT subject is the user's email (see section 5, `JwtService.generateToken`), changing email invalidates the existing token on the next request (email lookup in `CustomUserDetailsService` won't resolve). **Decision: [pick one — fill in once decided]**
-  - Option A: force re-login after email change (simpler, frontend just logs the user out and redirects to `/login` on success if email changed).
-  - Option B: issue and return a fresh token in the response (`{token, user}` same shape as `AuthResponse`), frontend swaps it into localStorage immediately, no re-login needed.
+- **Token invalidation on email change:** since the JWT subject is the user's email (see section 5, `JwtService.generateToken`), changing email invalidates the existing token on the next request. To avoid forcing a re-login, `PUT /auth/me` returns a fresh token alongside the updated user — same `{token, user}` shape as `AuthResponse` from `POST /auth/login` (reuse that DTO). Frontend immediately overwrites `localStorage`'s token and updates `AuthContext` state with the response — no logout/redirect needed, session continues seamlessly even after an email change.
 - **Never** log or persist `currentPassword`/`newPassword` in plaintext anywhere — same rule as `PaymentRequest`, shape-validate and discard.
 
 ### Books
