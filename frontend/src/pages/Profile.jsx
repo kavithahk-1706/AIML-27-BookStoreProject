@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 
@@ -13,6 +14,9 @@ function Profile() {
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const [showCurrent, setShowCurrent] = useState(false)
+  const [showNew, setShowNew] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -66,31 +70,46 @@ function Profile() {
 
         <label>
           Current password
-          <input
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            required
-          />
+          <div className="pw-field">
+            <input
+              type={showCurrent ? 'text' : 'password'}
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+            />
+            <button type="button" className="pw-toggle" onClick={() => setShowCurrent((v) => !v)} tabIndex={-1} aria-label={showCurrent ? 'Hide password' : 'Show password'}>
+              {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         </label>
 
         <p>Leave the fields below blank to keep your current password.</p>
 
         <label>
           New password
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
+          <div className="pw-field">
+            <input
+              type={showNew ? 'text' : 'password'}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <button type="button" className="pw-toggle" onClick={() => setShowNew((v) => !v)} tabIndex={-1} aria-label={showNew ? 'Hide password' : 'Show password'}>
+              {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         </label>
         <label>
           Confirm new password
-          <input
-            type="password"
-            value={confirmNewPassword}
-            onChange={(e) => setConfirmNewPassword(e.target.value)}
-          />
+          <div className="pw-field">
+            <input
+              type={showConfirm ? 'text' : 'password'}
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+            />
+            <button type="button" className="pw-toggle" onClick={() => setShowConfirm((v) => !v)} tabIndex={-1} aria-label={showConfirm ? 'Hide password' : 'Show password'}>
+              {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         </label>
 
         <button type="submit" disabled={submitting}>

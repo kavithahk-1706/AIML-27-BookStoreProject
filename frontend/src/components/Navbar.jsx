@@ -59,7 +59,7 @@ function Navbar() {
                 <Link to="/admin/orders">Manage Orders</Link>
               </>
             )}
-            <span>{user?.name}</span>
+            <span className="navbar-username">{user?.name}</span>
             <Link to="/profile">Profile</Link>
             <button onClick={handleLogout}>Log out</button>
           </>

@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
+import { useToast } from '../context/ToastContext'
 import { createOrder, processPayment } from '../api/orders'
 import CheckoutForm from '../components/CheckoutForm'
 import PaymentForm from '../components/PaymentForm'
 
 function Checkout() {
   const { items, total, itemCount, fetchCart } = useCart()
+  const { showToast } = useToast()
   const navigate = useNavigate()
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
@@ -39,12 +41,17 @@ function Checkout() {
     try {
       const order = await processPayment(pendingOrder.id, paymentDetails)
       // Both a successful and a "declined" simulated payment return 200 —
-      // the order's own status/paymentStatus tells the story, so either way
-      // we just go to the order detail page and let it render that state.
+      // the order's own status/paymentStatus tells the story.
+      if (order.status === 'CANCELLED') {
+        showToast('Payment failed. Please try again.', 'error')
+      } else {
+        showToast('Order placed successfully!')
+      }
       navigate(`/orders/${order.id}`, { replace: true })
     } catch (err) {
       // Covers 409 (order no longer payable) and other payment errors.
       const message = err.response?.data?.message || 'Payment failed. Please try again.'
+      showToast('Payment failed. Please try again.', 'error')
       setError(message)
     } finally {
       setSubmitting(false)
