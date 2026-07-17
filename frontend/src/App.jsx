@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Sun, Moon } from 'lucide-react'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
+import Landing from './pages/Landing'
 import Home from './pages/Home'
 import BookDetail from './pages/BookDetail'
 import Login from './pages/Login'
@@ -30,7 +33,8 @@ function App() {
         <CartProvider>
           <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/browse" element={<Home />} />
             <Route path="/books/:id" element={<BookDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -41,8 +45,9 @@ function App() {
             <Route path="/admin/books" element={<ProtectedRoute adminOnly><AdminBooks /></ProtectedRoute>} />
             <Route path="/admin/orders" element={<ProtectedRoute adminOnly><AdminOrders /></ProtectedRoute>} />
           </Routes>
+          <Footer />
           <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
-            {dark ? '☀️' : '🌙'}
+            {dark ? <Sun size={18} strokeWidth={1.8} /> : <Moon size={18} strokeWidth={1.8} />}
           </button>
         </CartProvider>
       </AuthProvider>
